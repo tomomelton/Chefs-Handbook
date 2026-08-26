@@ -2,8 +2,8 @@
 
 ## Table of Contents
 
-- [Documentation](#documentation/)
-  - [Database](#database/)
+- [Documentation](#documentation)
+  - [Database](#database)
 
 
 
