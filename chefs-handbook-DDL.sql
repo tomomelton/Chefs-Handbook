@@ -1,0 +1,25 @@
+CREATE SCHEMA IF NOT EXISTS chefs_handbook;
+
+SET search_path = chefs_handbook;
+
+
+CREATE TABLE IF NOT EXISTS users (
+	userID SERIAL PRIMARY KEY,
+	username VARCHAR NOT NULL UNIQUE,
+	password VARCHAR NOT NULL,
+	joinDate DATE DEFAULT CURRENT_DATE
+);
+
+
+CREATE TABLE recipes (
+	recipeID SERIAL PRIMARY KEY,
+	userID SERIAL NOT NULL,
+	ingredients VARCHAR,
+	directions VARCHAR,
+	creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+	FOREIGN KEY (userID) 
+	REFERENCES users(userID)
+	ON UPDATE CASCADE
+	ON DELETE CASCADE
+);
