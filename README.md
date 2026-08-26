@@ -1,19 +1,24 @@
 # Chefs Handbook
 
+This repository contains the documentation and code for my Chefs Handbook project.
+
 ## Table of Contents
 
 - [Documentation](#documentation)
-  - [Database](#database)
+  - [Database Schema](#database-schema)
 
 
 
 ## Documentation
 
-### Database
+### Database Schema
+
+This is the current database schema as of this version:
 
 ``` mermaid
 erDiagram
-    users ||--o{ recipes : creates
+    direction LR
+    users ||--o{ recipes : ""
 
     users {
         SERIAL userID PK
@@ -30,3 +35,5 @@ erDiagram
         TIMESTAMP creationDate
     }
 ```
+
+For this project, this schema is implemented in Postgresql and connected to via Java code
