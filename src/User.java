@@ -1,3 +1,17 @@
+/******************************************************************************
+
+ File        : User.java
+
+ Date        : Tuesday 25th August 2026
+
+ Author      : Tom Melton
+
+ Description : Class describing a user
+
+ History     : 25/08/2026 - v1.00
+
+ ******************************************************************************/
+
 public class User
 {
     private String username;
