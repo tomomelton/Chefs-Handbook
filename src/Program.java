@@ -66,6 +66,7 @@ public class Program
                 if (checkPassword(password, queryPassword))
                 {
                     this.user = new User(username, queryID);
+                    this.recipes = compileRecipes(userRecipes(username));
 
                     return true;
                 }
@@ -79,17 +80,6 @@ public class Program
         }
     }
 
-
-    private ResultSet userDetails(String username) throws SQLException
-    {
-        String sql = "SELECT userID, username, password FROM users WHERE username = ?";
-
-        PreparedStatement statement = conn.prepareStatement(sql);
-
-        statement.setString(1, username);
-
-        return statement.executeQuery();
-    }
 
     public boolean register(String username, String password) throws SQLException
     {
@@ -125,11 +115,64 @@ public class Program
     }
 
 
+    private ResultSet userRecipes(String username) throws SQLException
+    {
+        // Selects a users recipes from the database
+
+        String sql =
+            """
+            SELECT r.*
+            FROM recipes AS r
+            JOIN users AS u
+            ON r.userID = u.userID
+            AND username = ?
+            """;
+
+        PreparedStatement statement = conn.prepareStatement(sql);
+
+        statement.setString(1, username);
+
+        return  statement.executeQuery();
+    }
+
+
+    private ArrayList<Recipe> compileRecipes(ResultSet recipeResults) throws SQLException
+    {
+        // Compiles a resultSet of recipes into recipe objects
+
+        String name, ingredients, directions;
+        ArrayList<Recipe> recipes = new ArrayList<>();
+
+        while(recipeResults.next())
+        {
+            name = recipeResults.getString("name");
+            ingredients = recipeResults.getString("ingredients");
+            directions = recipeResults.getString("directions");
+
+            recipes.add(new Recipe(name, ingredients, directions));
+        }
+        return recipes;
+    }
+
+
+    private ResultSet userDetails(String username) throws SQLException
+    {
+        String sql = "SELECT userID, username, password FROM users WHERE username = ?";
+
+        PreparedStatement statement = conn.prepareStatement(sql);
+
+        statement.setString(1, username);
+
+        return statement.executeQuery();
+    }
+
+
     private String hash(String password)
     {
         // Function to hash a password, to be used before entry to database
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
+
 
     private boolean checkPassword(String plainTextPassword, String hashedPassword)
     {
@@ -158,6 +201,8 @@ public class Program
             System.out.println("Logged in!");
 
             System.out.println(p.user);
+
+            System.out.println(p.recipes);
         }
         else
         {
