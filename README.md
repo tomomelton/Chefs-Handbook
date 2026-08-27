@@ -6,8 +6,11 @@ This repository contains the documentation and code for my Chefs Handbook projec
 
 - [Documentation](#documentation)
   - [Database Schema](#database-schema)
-
-
+  - [Java Classes](#java-classes)
+    - [Recipes](#recipes)
+    - [User](#user)
+    - [Connector](#connector)
+    - [Program](#program)
 
 ## Documentation
 
@@ -37,3 +40,17 @@ erDiagram
 ```
 
 For this project, this schema is implemented in Postgresql and connected to via Java code
+
+---
+
+### Java Classes
+
+#### **Recipe**
+
+Class describing a recipe object and containing accessing methods
+
+##### Constructors
+
+> - Recipe(String name, String ingredients, String directions)
+
+
