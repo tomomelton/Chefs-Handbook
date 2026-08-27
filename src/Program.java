@@ -3,6 +3,7 @@ import org.postgresql.util.PSQLException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
@@ -46,13 +47,49 @@ public class Program
     }
 
 
-//    public void login(String username, String password)
-//    {
-//        // Attempts to log in a user
-//
-//        String sql = ""
-//    }
+    public boolean login(String username, String password) throws SQLException
+    {
+        // Attempts to log in a user
+        // Returns true if successful, false if failed (either username or password is incorrect)
 
+        // fetch rows from users table with this username
+        try (ResultSet userResult = userDetails(username))
+        {
+            // If username exists
+            if (userResult.next())
+            {
+                String queryID, queryPassword;
+
+                queryID = userResult.getString("userID");
+                queryPassword = userResult.getString("password");
+
+                if (checkPassword(password, queryPassword))
+                {
+                    this.user = new User(username, queryID);
+
+                    return true;
+                }
+            }
+            // username or password is incorrect
+            return false;
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private ResultSet userDetails(String username) throws SQLException
+    {
+        String sql = "SELECT userID, username, password FROM users WHERE username = ?";
+
+        PreparedStatement statement = conn.prepareStatement(sql);
+
+        statement.setString(1, username);
+
+        return statement.executeQuery();
+    }
 
     public boolean register(String username, String password) throws SQLException
     {
@@ -94,18 +131,41 @@ public class Program
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    private boolean checkPassword(String plainTextPassword, String hashedPassword)
+    {
+        // compares the plain text password to its hashed counterpart
+        // Returns true if the arguments match via the method
+        return BCrypt.checkpw(plainTextPassword, hashedPassword);
+    }
+
 
 
     public static void main(String[] args) throws SQLException {
+        // testing details:
+        // username = "Tom"
+        // password = "password"
+
         Program p = new Program();
 
-        if (p.register("Tom", "password"))
+
+
+        String password = "password";
+
+        System.out.println(p.hash(password));
+
+        if (p.login("Tom", password))
         {
-            System.out.println("Successfully registered!");
+            System.out.println("Logged in!");
+
+            System.out.println(p.user);
         }
         else
         {
-            System.out.println("Username already exists!");
+            System.out.println("Username or password incorrect");
         }
+
+
+
+
     }
 }
