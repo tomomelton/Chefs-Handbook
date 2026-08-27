@@ -1,10 +1,7 @@
 import org.mindrot.jbcrypt.BCrypt;
 import org.postgresql.util.PSQLException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import java.util.ArrayList;
 
@@ -31,20 +28,6 @@ public class Program
 
     // Database connection
     Connection conn = attemptConn();
-
-
-    private Connection attemptConn()
-    {
-        // Attempts to connect to the database using Connector
-        try
-        {
-            return Connector.getConnection();
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
 
 
     public boolean login(String username, String password) throws SQLException
@@ -115,6 +98,69 @@ public class Program
     }
 
 
+    public boolean createRecipe(String name, String ingredients, String directions) throws SQLException
+    {
+        // Creates a new recipe object and adds it to the database and arraylist
+        // Returns true if user exists and creation is successful, false if not
+
+        // Check user is logged in
+        if (this.user != null)
+        {
+            // Insert recipe into database using current user
+            insertRecipe(name, ingredients, directions);
+
+            // Replace with new list
+            this.recipes = compileRecipes(userRecipes(this.user.getUsername()));
+
+            return true;
+        }
+        return false;
+
+    }
+
+
+    private void insertRecipe(String name, String ingredients, String directions) throws SQLException
+    {
+        // method to insert recipe object into the database
+
+        int userID = Integer.parseInt(this.user.getId());
+
+        String sql =
+                """
+                INSERT INTO recipes (userID, name, ingredients, directions)
+                VALUES(?, ?, ?, ?)
+                """;
+
+       try( PreparedStatement statement = conn.prepareStatement(sql))
+       {
+           statement.setInt(1, userID);
+           statement.setString(2, name);
+           statement.setString(3, ingredients);
+           statement.setString(4, directions);
+
+           statement.executeUpdate();
+       }
+       catch (SQLException e)
+       {
+           throw new RuntimeException(e);
+       }
+    }
+
+
+    private Connection attemptConn()
+    {
+        // Attempts to connect to the database using Connector
+        try
+        {
+            return Connector.getConnection();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     private ResultSet userRecipes(String username) throws SQLException
     {
         // Selects a users recipes from the database
@@ -141,15 +187,17 @@ public class Program
         // Compiles a resultSet of recipes into recipe objects
 
         String name, ingredients, directions;
+        int id;
         ArrayList<Recipe> recipes = new ArrayList<>();
 
         while(recipeResults.next())
         {
+            id = recipeResults.getInt("recipeID");
             name = recipeResults.getString("name");
             ingredients = recipeResults.getString("ingredients");
             directions = recipeResults.getString("directions");
 
-            recipes.add(new Recipe(name, ingredients, directions));
+            recipes.add(new Recipe(id, name, ingredients, directions));
         }
         return recipes;
     }
@@ -183,7 +231,8 @@ public class Program
 
 
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException
+    {
         // testing details:
         // username = "Tom"
         // password = "password"
@@ -191,10 +240,11 @@ public class Program
         Program p = new Program();
 
 
-
         String password = "password";
 
-        System.out.println(p.hash(password));
+
+
+        p.register("Tom", "password");
 
         if (p.login("Tom", password))
         {
@@ -209,7 +259,13 @@ public class Program
             System.out.println("Username or password incorrect");
         }
 
+//        p.createRecipe(
+//                "Toffee Sauce",
+//                "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
+//                "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
+//        );
 
+//        System.out.println(p.recipes);
 
 
     }

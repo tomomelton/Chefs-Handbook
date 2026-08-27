@@ -18,16 +18,26 @@ import java.util.regex.Pattern;
 
 public class Recipe
 {
+    private int recipeID;
     private String name;
     private String ingredients;
     private String directions;
     private double multiplier = 1;
 
-    public Recipe(String name, String ingredients, String directions)
+    public Recipe(int recipeID, String name, String ingredients, String directions)
     {
+        this.recipeID = recipeID;
         this.name = name;
         this.ingredients = ingredients;
         this.directions = directions;
+    }
+
+    public int getRecipeID() {
+        return recipeID;
+    }
+
+    public void setRecipeID(int recipeID) {
+        this.recipeID = recipeID;
     }
 
     public String getName() {
@@ -93,6 +103,7 @@ public class Recipe
     public static void main(String[] args)
     {
         Recipe toffeeSauce = new Recipe(
+        1,
         "Toffee Sauce",
         "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
         "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
@@ -109,6 +120,4 @@ public class Recipe
         System.out.println(toffeeSauce);
 
     }
-
-
 }
