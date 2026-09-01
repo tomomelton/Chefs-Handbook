@@ -1,10 +1,12 @@
+package models;
+
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /******************************************************************************
 
- File        : Recipe.java
+ File        : models.Recipe.java
 
  Date        : Tuesday 25th August 2026
 
@@ -18,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class Recipe
 {
-    private int recipeID;
+    private final int recipeID;
     private String name;
     private String ingredients;
     private String directions;
@@ -34,10 +36,6 @@ public class Recipe
 
     public int getRecipeID() {
         return recipeID;
-    }
-
-    public void setRecipeID(int recipeID) {
-        this.recipeID = recipeID;
     }
 
     public String getName() {

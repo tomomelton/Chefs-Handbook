@@ -1,6 +1,8 @@
+package models;
+
 /******************************************************************************
 
- File        : User.java
+ File        : models.User.java
 
  Date        : Tuesday 25th August 2026
 
@@ -16,11 +18,19 @@ public class User
 {
     private String username;
     private String id;
+    private String password;
 
     public User(String username, String id)
     {
         this.username = username;
         this.id = id;
+    }
+
+    public User(String username, String id, String password)
+    {
+        this.username = username;
+        this.id = id;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -37,6 +47,10 @@ public class User
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override
