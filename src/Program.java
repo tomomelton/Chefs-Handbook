@@ -1,9 +1,14 @@
+import database.DatabaseConnection;
+import models.Recipe;
+import models.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 
 import java.util.ArrayList;
+
+import static database.DatabaseConnection.getConnection;
 
 /******************************************************************************
 
@@ -27,7 +32,7 @@ public class Program
     ArrayList<Recipe> recipes;
 
     // Database connection
-    Connection conn = attemptConn();
+    Connection conn = getConnection();
 
 
     public boolean login(String username, String password) throws SQLException
@@ -144,20 +149,6 @@ public class Program
        {
            throw new RuntimeException(e);
        }
-    }
-
-
-    private Connection attemptConn()
-    {
-        // Attempts to connect to the database using Connector
-        try
-        {
-            return Connector.getConnection();
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 
 

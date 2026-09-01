@@ -1,3 +1,5 @@
+package database;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.Connection;
@@ -6,7 +8,7 @@ import java.sql.SQLException;
 
 /******************************************************************************
 
- File        : Connector.java
+ File        : database.DatabaseConnection.java
 
  Date        : Wednesday 26th August 2026
 
@@ -19,7 +21,7 @@ import java.sql.SQLException;
  ******************************************************************************/
 
 
-public class Connector
+public class DatabaseConnection
 {
     // load .env data
     private static final Dotenv dotenv = Dotenv.load();
@@ -29,9 +31,16 @@ public class Connector
     private static final String USER = dotenv.get("DB_USER");
     private static final String PASSWORD = dotenv.get("DB_PASSWORD");
 
-    public static Connection getConnection() throws SQLException
+    public static Connection getConnection()
     {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        try
+        {
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -39,7 +48,7 @@ public class Connector
     public static void main(String[] args)
     {
 
-        try (Connection connection = Connector.getConnection())
+        try (Connection connection = DatabaseConnection.getConnection())
         {
             System.out.println("Successfully connected to PostgreSQL!");
         }
