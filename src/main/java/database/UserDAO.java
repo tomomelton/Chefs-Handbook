@@ -83,7 +83,7 @@ public class UserDAO
             {
                 return new User(
                         resultSet.getString("username"),
-                        resultSet.getString("id"),
+                        resultSet.getString("userID"),
                         resultSet.getString("password")
                 );
             }
@@ -93,5 +93,10 @@ public class UserDAO
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void main(String[] args)
+    {
+        System.out.println(getUser("Tom"));
     }
 }

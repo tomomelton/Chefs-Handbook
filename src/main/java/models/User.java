@@ -18,7 +18,7 @@ public class User
 {
     private String username;
     private String id;
-    private String password;
+    private String passwordHash = " ";
 
     public User(String username, String id)
     {
@@ -26,11 +26,11 @@ public class User
         this.id = id;
     }
 
-    public User(String username, String id, String password)
+    public User(String username, String id, String passwordHash)
     {
         this.username = username;
         this.id = id;
-        this.password = password;
+        this.passwordHash = passwordHash;
     }
 
     public String getUsername() {
@@ -49,8 +49,8 @@ public class User
         this.id = id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
     @Override
