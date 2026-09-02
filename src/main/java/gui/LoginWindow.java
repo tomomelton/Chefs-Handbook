@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -33,7 +34,7 @@ import static utils.Hash.checkPassword;
  History     : 02/09/2026 - v1.00
  ******************************************************************************/
 
-public class LoginPage
+public class LoginWindow
 {
     private static User user;
 
@@ -81,9 +82,12 @@ public class LoginPage
         errorLabel.setVisible(false);
         GridPane.setConstraints(errorLabel, 1, 3);
 
+
+        // Buttons
+        HBox buttons = new HBox(10);
+
         // Login button
         Button loginButton = new Button("Login");
-        GridPane.setConstraints(loginButton, 1, 2);
         loginButton.setOnAction(e -> {
 
             boolean valid = login(nameInput.getText(), passInput.getText());
@@ -97,8 +101,17 @@ public class LoginPage
             }
         });
 
+        // Cancel button
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(e -> window.close());
 
-        grid.getChildren().addAll(nameLabel, nameInput, passLabel, passInput, loginButton, errorLabel);
+        buttons.getChildren().addAll(loginButton, cancelButton);
+        GridPane.setConstraints(buttons, 1, 2);
+
+
+
+
+        grid.getChildren().addAll(nameLabel, nameInput, passLabel, passInput, buttons, errorLabel);
 
         Scene scene = new Scene(grid);
 

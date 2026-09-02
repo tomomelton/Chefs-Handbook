@@ -26,11 +26,11 @@ import models.User;
  History     : 02/09/2026 - v1.00
  ******************************************************************************/
 
-public class HomePage
+public class HomeWindow
 {
     private User user;
 
-    public HomePage(User user)
+    public HomeWindow(User user)
     {
         this.user = user;
 

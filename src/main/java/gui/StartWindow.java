@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import models.User;
 
 
-public class StartPage
+public class StartWindow
 {
     public static void load()
     {
@@ -32,11 +32,11 @@ public class StartPage
         // Login button
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
-            User user = LoginPage.load();
+            User user = LoginWindow.load();
             if (user != null)
             {
                 window.close();
-                new HomePage(user);
+                new HomeWindow(user);
             }
 
         });
@@ -44,11 +44,11 @@ public class StartPage
         // Register button
         Button registerButton = new Button("Register");
         registerButton.setOnAction(e -> {
-            User user = RegisterPage.load();
+            User user = RegisterWindow.load();
             if (user != null)
             {
                 window.close();
-                new HomePage(user);
+                new HomeWindow(user);
             }
         });
 

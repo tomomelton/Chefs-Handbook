@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.User;
@@ -36,7 +37,7 @@ import static database.UserDAO.getUser;
  History     : 02/09/2026 - v1.00
  ******************************************************************************/
 
-public class RegisterPage 
+public class RegisterWindow
 {
     private static User user;
 
@@ -105,11 +106,13 @@ public class RegisterPage
             label.setVisible(false);
             GridPane.setConstraints(label, 1, 4);
         };
-        
+
+
+        // Buttons
+        HBox buttons = new HBox(10);
 
         // Register button
         Button registerButton = new Button("Register");
-        GridPane.setConstraints(registerButton, 1, 3);
         registerButton.setOnAction(e -> {
 
             User tempUser = getUser(nameInput.getText());
@@ -157,12 +160,21 @@ public class RegisterPage
             }
         });
 
+        // Cancel button
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(e -> window.close());
+
+        buttons.getChildren().addAll(registerButton, cancelButton);
+        GridPane.setConstraints(buttons, 1, 3);
+
+
+
 
         grid.getChildren().addAll(
                 nameLabel, nameInput,
                 passLabel, passInput,
                 passConfLabel, passConfInput,
-                registerButton
+                buttons
         );
 
         grid.getChildren().addAll(errorLabels);

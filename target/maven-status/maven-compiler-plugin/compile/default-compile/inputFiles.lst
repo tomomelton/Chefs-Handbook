@@ -1,10 +1,10 @@
 C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\database\DatabaseConnection.java
 C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\database\RecipeDAO.java
 C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\database\UserDAO.java
-C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\HomePage.java
-C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\LoginPage.java
-C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\RegisterPage.java
-C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\StartPage.java
+C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\HomeWindow.java
+C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\LoginWindow.java
+C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\RegisterWindow.java
+C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\gui\StartWindow.java
 C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\Main.java
 C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\models\Recipe.java
 C:\Users\tomom\OneDrive\Documents\Chefs Handbook\Chefs-Handbook\src\main\java\models\User.java

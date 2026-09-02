@@ -1,5 +1,5 @@
-gui\StartPage.class
+gui\HomeWindow.class
 Main.class
-gui\HomePage.class
-gui\LoginPage.class
-gui\RegisterPage.class
+gui\RegisterWindow.class
+gui\StartWindow.class
+gui\LoginWindow.class
