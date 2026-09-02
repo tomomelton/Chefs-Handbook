@@ -31,7 +31,7 @@ public class UserDAO
 {
     private static final Connection conn = getConnection();
 
-    public static boolean CreateUser(String username, String plainTextPassword)
+    public static boolean createUser(String username, String plainTextPassword)
     {
         // Attempt to add a new user to the database
         // username must be unique

@@ -1,0 +1,5 @@
+gui\StartPage.class
+Main.class
+gui\HomePage.class
+gui\LoginPage.class
+gui\RegisterPage.class
