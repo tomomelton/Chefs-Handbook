@@ -1,5 +1,9 @@
+gui\ConfirmationBox.class
+gui\RegisterWindow.class
+gui\LoginWindow.class
 gui\HomeWindow.class
 Main.class
-gui\RegisterWindow.class
+gui\RecipeLayout.class
+gui\RecipeListCell.class
 gui\StartWindow.class
-gui\LoginWindow.class
+gui\RecipeEditor.class

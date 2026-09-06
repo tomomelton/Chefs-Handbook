@@ -20,11 +20,18 @@ import java.util.regex.Pattern;
 
 public class Recipe
 {
-    private final int recipeID;
+    private int recipeID;
     private String name;
     private String ingredients;
     private String directions;
     private double multiplier = 1;
+
+    public Recipe()
+    {
+        this.name = "";
+        this.ingredients = "";
+        this.directions = "";
+    }
 
     public Recipe(int recipeID, String name, String ingredients, String directions)
     {
