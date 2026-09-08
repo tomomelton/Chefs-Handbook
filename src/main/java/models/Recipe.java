@@ -1,10 +1,12 @@
+package models;
+
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /******************************************************************************
 
- File        : Recipe.java
+ File        : models.Recipe.java
 
  Date        : Tuesday 25th August 2026
 
@@ -18,16 +20,29 @@ import java.util.regex.Pattern;
 
 public class Recipe
 {
+    private int recipeID;
     private String name;
     private String ingredients;
     private String directions;
     private double multiplier = 1;
 
-    public Recipe(String name, String ingredients, String directions)
+    public Recipe()
     {
+        this.name = "";
+        this.ingredients = "";
+        this.directions = "";
+    }
+
+    public Recipe(int recipeID, String name, String ingredients, String directions)
+    {
+        this.recipeID = recipeID;
         this.name = name;
         this.ingredients = ingredients;
         this.directions = directions;
+    }
+
+    public int getRecipeID() {
+        return recipeID;
     }
 
     public String getName() {
@@ -93,9 +108,16 @@ public class Recipe
     public static void main(String[] args)
     {
         Recipe toffeeSauce = new Recipe(
-        "Toffee Sauce",
-        "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
-        "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
+                1,
+                "Toffee Sauce",
+                "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
+                "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
+        );
+        Recipe pannaCotta = new Recipe(
+                2,
+                "Panna Cotta",
+                "250g sugar\n500ml milk\n1500ml double cream\n6 gelatin leaves",
+                "Bring sugar, milk, and cream to a simmer on a low heat\nTake off heat and add gelatin\nStrain and pour into moulds"
         );
 
         toffeeSauce.setMultiplier(0.9);
@@ -109,6 +131,4 @@ public class Recipe
         System.out.println(toffeeSauce);
 
     }
-
-
 }

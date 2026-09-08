@@ -1,0 +1,10 @@
+gui\ConfirmationBox.class
+gui\RegisterWindow.class
+gui\LoginWindow.class
+gui\HomeWindow.class
+Main.class
+gui\RecipeLayout.class
+gui\AlertBox.class
+gui\RecipeListCell.class
+gui\StartWindow.class
+gui\RecipeEditor.class
