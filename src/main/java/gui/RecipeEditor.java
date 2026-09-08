@@ -45,7 +45,7 @@ public class RecipeEditor extends VBox
     private Button cancelButton;
 
     // Tooltips
-    private static final Tooltip saveToolip = new Tooltip("Save");
+    private static final Tooltip saveTooltip = new Tooltip("Save");
     private static final Tooltip cancelTooltip = new Tooltip("Cancel");
 
     // Constructors
@@ -86,10 +86,10 @@ public class RecipeEditor extends VBox
 
 
         // Tooltips
-        Tooltip.install(saveButton, saveToolip);
+        Tooltip.install(saveButton, saveTooltip);
         Tooltip.install(cancelButton, cancelTooltip);
 
-        saveToolip.setShowDelay(Duration.seconds(0.25));
+        saveTooltip.setShowDelay(Duration.seconds(0.25));
         cancelTooltip.setShowDelay(Duration.seconds(0.25));
 
 
@@ -134,20 +134,35 @@ public class RecipeEditor extends VBox
 
     private void save()
     {
-        // Update recipe object
-        updateRecipe();
-
-        // If no previous recipe
-        if (parent.getRecipeLayout() == null)
+        System.out.println(nameField.getText());
+        // Check name field isn't empty
+        if (!"".equals(nameField.getText()))
         {
-            // Add recipe to recipe list
-            parent.addRecipe(recipe);
-            // Set recipe as current layout
-            parent.setRecipeLayout(new RecipeLayout(parent, recipe));
-        }
+            System.out.println(1);
+            // Update recipe object
+            updateRecipe();
 
-        parent.resetRecipe();
-        parent.getRecipeLayout().refresh();
+            // If no previous recipe
+            if (parent.getRecipeLayout() == null)
+            {
+                System.out.println(2);
+                // Add recipe to recipe list
+                parent.addRecipe(recipe);
+                // Set recipe as current layout
+                parent.setRecipeLayout(new RecipeLayout(parent, recipe));
+
+            }
+
+            // Reset and refresh
+            parent.resetRecipe();
+            parent.getRecipeLayout().refresh();
+        }
+        else
+        {
+            System.out.println(3);
+            new AlertBox("Name field cannot be empty");
+        }
+        System.out.println(4);
 
     }
 

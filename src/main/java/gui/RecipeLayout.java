@@ -37,16 +37,26 @@ public class RecipeLayout extends VBox
     private final Recipe recipe;
     private final HomeWindow parent;
 
+    // Layouts
+    private final HBox titleRow;
+    private final HBox scaleRow;
+
     // Labels
     private final Label nameLabel;
     private final Label ingredientsHeading;
     private final Label ingredientsContent;
     private final Label directionsHeading;
     private final Label directionsContent;
+    private final Label scaleLabel;
+
+    // Text Fields
+    private final TextField scaleInput;
 
     // Buttons
     private final Button editButton;
     private final Button deleteButton;
+    private final Button setScaleButton;
+    private final Button resetScaleButton;
 
     // Tooltips
     private static final Tooltip editTooltip = new Tooltip("Edit recipe");
@@ -77,6 +87,14 @@ public class RecipeLayout extends VBox
         directionsContent = new Label(recipe.getDirections());
         directionsContent.setStyle("-fx-font-size: 13");
 
+        scaleLabel = new Label("Scale Multiplier:");
+        scaleLabel.setStyle("-fx-font-size: 15");
+
+
+        // Text Fields
+        scaleInput = new TextField("1.0");
+        scaleInput.setMinWidth(5);
+
 
         // Buttons
         editButton = new Button();
@@ -86,6 +104,12 @@ public class RecipeLayout extends VBox
         deleteButton = new Button();
         deleteButton.setGraphic(new FontIcon(FontAwesomeSolid.TRASH));
         deleteButton.setOnAction(e -> delete());
+
+        setScaleButton = new Button("Set");
+        setScaleButton.setOnAction(e -> setScale());
+
+        resetScaleButton = new Button("Reset");
+        resetScaleButton.setOnAction(e -> resetScale());
 
 
         // Tooltips
@@ -97,7 +121,7 @@ public class RecipeLayout extends VBox
 
 
         // Top Row
-        HBox titleRow = new HBox(5);
+        titleRow = new HBox(5);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -105,11 +129,17 @@ public class RecipeLayout extends VBox
         titleRow.getChildren().addAll(nameLabel, spacer, editButton, deleteButton);
 
 
+        // Scale Row
+        scaleRow = new HBox(5);
+        scaleRow.getChildren().addAll(scaleLabel, scaleInput, setScaleButton, resetScaleButton);
+
+
         // Layout
         setPadding(new Insets(20, 20, 20, 20));
 
         getChildren().addAll(
                 titleRow,
+                scaleRow,
                 ingredientsHeading, ingredientsContent,
                 directionsHeading, directionsContent
         );
@@ -128,6 +158,7 @@ public class RecipeLayout extends VBox
     private void edit()
     {
         parent.setCenter(new RecipeEditor(parent, recipe));
+
     }
 
     private void delete()
@@ -139,6 +170,24 @@ public class RecipeLayout extends VBox
             parent.removeRecipe();
             parent.displayTopRecipe();
         }
+    }
+
+    private void setScale()
+    {
+        double multiplier = Double.parseDouble(scaleInput.getText());
+
+        recipe.setMultiplier(multiplier);
+
+        refresh();
+    }
+
+    private void resetScale()
+    {
+        scaleInput.setText("1.0");
+
+        recipe.resetMultiplier();
+
+        refresh();
     }
 
 

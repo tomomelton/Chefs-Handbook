@@ -1,5 +1,6 @@
 import gui.HomeWindow;
 
+import gui.StartWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import models.User;
@@ -14,10 +15,10 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage)
     {
-//        StartWindow.load();
+        StartWindow.load();
 
         // Temp fix while VPN is down
-        new HomeWindow(new User("Tom", "1"));
+//        new HomeWindow(new User("Tom", "1"));
     }
 
 

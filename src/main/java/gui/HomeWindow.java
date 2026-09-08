@@ -3,6 +3,7 @@ package gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,6 +22,8 @@ import models.Recipe;
 import models.User;
 
 import java.util.NoSuchElementException;
+
+import static database.RecipeDAO.userRecipes;
 
 /******************************************************************************
 
@@ -62,6 +65,7 @@ public class HomeWindow
 
     // Lists
     private ObservableList<Recipe> recipes;
+    private FilteredList<Recipe> filteredRecipes;
     private ListView<Recipe> recipeList;
 
     // Text Fields
@@ -113,26 +117,12 @@ public class HomeWindow
 
         // Lists
         recipes = FXCollections.observableArrayList();
+        recipes.addAll(userRecipes(this.user.getUsername()));
 
-        recipeList = new ListView<>(recipes);
+        filteredRecipes = new FilteredList<>(recipes, recipe -> true);
+
+        recipeList = new ListView<>(filteredRecipes);
         recipeList.setStyle("-fx-font-size: 15");
-        recipeList.getItems().addAll(
-//                userRecipes(this.user.getUsername())
-
-                // Temp fix while VPN is down
-                new Recipe(
-                        1,
-                        "Toffee Sauce",
-                        "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
-                        "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
-                ),
-                new Recipe(
-                        2,
-                        "Panna Cotta",
-                        "250g sugar\n500ml milk\n1500ml double cream\n6 gelatin leaves",
-                        "Bring sugar, milk, and cream to a simmer on a low heat\nTake off heat and add gelatin\nStrain and pour into moulds"
-                )
-        );
         recipeList.setCellFactory(list -> new RecipeListCell());
         recipeList.setOnMouseClicked(e -> displayRecipe());
 
@@ -140,16 +130,21 @@ public class HomeWindow
         // Searchbar
         recipeSearch = new TextField();
         recipeSearch.setPromptText("Search recipes...");
-        recipeSearch.setOnKeyTyped(e -> {
-            System.out.println(recipeSearch.getText());
-        });
+        recipeSearch.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+
+            String search = newValue.toLowerCase();
+
+            filteredRecipes.setPredicate(recipe -> recipe.getName().toLowerCase().contains(search));
+        }
+        );
         HBox.setHgrow(recipeSearch, Priority.ALWAYS);
 
 
         // Buttons
         newRecipeButton = new Button();
         newRecipeButton.setGraphic(new FontIcon("fas-plus"));
-        newRecipeButton.setOnAction(e -> borderPane.setCenter(new RecipeEditor(this)));
+        newRecipeButton.setOnAction(e -> newRecipe());
 
 
         // Tooltips
@@ -197,6 +192,11 @@ public class HomeWindow
         }
     }
 
+    private void newRecipe()
+    {
+        recipeLayout = null;
+        borderPane.setCenter(new RecipeEditor(this));
+    }
 
     // Public Methods
     public void resetRecipe()
@@ -244,5 +244,6 @@ public class HomeWindow
     {
         // Adds a new recipe to recipes
         recipes.add(recipe);
+        recipeList.refresh();
     }
 }
