@@ -35,7 +35,3 @@ erDiagram
 ```
 
 For this project, this schema is implemented in Postgresql and connected to via Java code
-
-> - models.Recipe(String name, String ingredients, String directions)
-
-
