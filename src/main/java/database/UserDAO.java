@@ -83,7 +83,7 @@ public class UserDAO
             {
                 return new User(
                         resultSet.getString("username"),
-                        resultSet.getString("userID"),
+                        resultSet.getInt("userID"),
                         resultSet.getString("password")
                 );
             }

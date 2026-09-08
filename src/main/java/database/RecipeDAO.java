@@ -30,9 +30,16 @@ public class RecipeDAO
 {
     private static final Connection conn = getConnection();
 
-    public static void insertRecipe(int userID, String name, String ingredients, String directions)
+    public static void insertRecipe(int userID, Recipe recipe)
     {
         // method to insert recipe object into the database
+
+        String name, ingredients, directions;
+
+        name = recipe.getName();
+        ingredients = recipe.getIngredients();
+        directions = recipe.getDirections();
+
 
         String sql =
                 """
@@ -46,6 +53,42 @@ public class RecipeDAO
             statement.setString(2, name);
             statement.setString(3, ingredients);
             statement.setString(4, directions);
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void updateRecipe(Recipe recipe)
+    {
+        // method to insert recipe object into the database
+
+        String name, ingredients, directions;
+        int recipeID;
+
+
+        name = recipe.getName();
+        ingredients = recipe.getIngredients();
+        directions = recipe.getDirections();
+        recipeID = recipe.getRecipeID();
+
+
+        String sql =
+                """
+                UPDATE recipes
+                SET (name, ingredients, directions) = (?, ?, ?)
+                WHERE recipeid = ?;
+                """;
+
+        try( PreparedStatement statement = conn.prepareStatement(sql))
+        {
+            statement.setString(1, name);
+            statement.setString(2, ingredients);
+            statement.setString(3, directions);
+            statement.setInt(4, recipeID);
 
             statement.executeUpdate();
         }

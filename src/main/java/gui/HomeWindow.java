@@ -179,6 +179,9 @@ public class HomeWindow
         this.recipeLayout = recipeLayout;
     }
 
+    public User getUser() {
+        return user;
+    }
 
     // Button Methods
     private void displayRecipe()

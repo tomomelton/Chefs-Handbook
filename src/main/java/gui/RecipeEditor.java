@@ -1,6 +1,7 @@
 package gui;
 
 
+import database.RecipeDAO;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -8,6 +9,8 @@ import javafx.util.Duration;
 import models.Recipe;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
+
+import static database.RecipeDAO.insertRecipe;
 
 /******************************************************************************
 
@@ -134,36 +137,35 @@ public class RecipeEditor extends VBox
 
     private void save()
     {
-        System.out.println(nameField.getText());
         // Check name field isn't empty
         if (!"".equals(nameField.getText()))
         {
-            System.out.println(1);
             // Update recipe object
             updateRecipe();
 
             // If no previous recipe
             if (parent.getRecipeLayout() == null)
             {
-                System.out.println(2);
                 // Add recipe to recipe list
                 parent.addRecipe(recipe);
+
                 // Set recipe as current layout
                 parent.setRecipeLayout(new RecipeLayout(parent, recipe));
 
+                // Add recipe to database
+                insertRecipe(parent.getUser().getId(), recipe);
             }
-
             // Reset and refresh
             parent.resetRecipe();
             parent.getRecipeLayout().refresh();
+
+            // Update recipe in database
+            RecipeDAO.updateRecipe(recipe);
         }
         else
         {
-            System.out.println(3);
             new AlertBox("Name field cannot be empty");
         }
-        System.out.println(4);
-
     }
 
 
