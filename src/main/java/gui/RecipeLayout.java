@@ -13,6 +13,8 @@ import models.Recipe;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import static database.RecipeDAO.deleteRecipe;
+
 /******************************************************************************
 
  File        : RecipeLayout.java
@@ -144,13 +146,7 @@ public class RecipeLayout extends VBox
                 directionsHeading, directionsContent
         );
 
-        setStyle(
-                """
-                -fx-background-color: #ededed;
-                -fx-border-color: #c7c7c7;
-                -fx-border-width: 3
-                """
-        );
+        setId("recipe");
     }
 
 
@@ -169,6 +165,9 @@ public class RecipeLayout extends VBox
         {
             parent.removeRecipe();
             parent.displayTopRecipe();
+
+            // Delete recipe from database
+            deleteRecipe(recipe);
         }
     }
 

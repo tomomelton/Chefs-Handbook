@@ -102,7 +102,8 @@ public class HomeWindow
         leftMenu = new VBox(10);
         leftMenu.setAlignment(Pos.TOP_CENTER);
         leftMenu.setPadding(new Insets(20, 20, 20, 20));
-        leftMenu.setStyle("-fx-background-color: #e0e0e0");
+        leftMenu.setId("left-menu");
+//        leftMenu.setStyle("-fx-background-color: #e0e0e0");
 
         searchRow = new HBox(5);
 
@@ -117,7 +118,21 @@ public class HomeWindow
 
         // Lists
         recipes = FXCollections.observableArrayList();
-        recipes.addAll(userRecipes(this.user.getUsername()));
+        recipes.addAll(
+                userRecipes(this.user.getUsername())
+//            new Recipe(
+//                    1,
+//                    "Toffee Sauce",
+//                    "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
+//                    "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
+//            ),
+//            new Recipe(
+//                    2,
+//                    "Panna Cotta",
+//                    "250g sugar\n500ml milk\n1500ml double cream\n6 gelatin leaves",
+//                    "Bring sugar, milk, and cream to a simmer on a low heat\nTake off heat and add gelatin\nStrain and pour into moulds"
+//            )
+        );
 
         filteredRecipes = new FilteredList<>(recipes, recipe -> true);
 
@@ -125,6 +140,7 @@ public class HomeWindow
         recipeList.setStyle("-fx-font-size: 15");
         recipeList.setCellFactory(list -> new RecipeListCell());
         recipeList.setOnMouseClicked(e -> displayRecipe());
+        recipeList.setId("recipe-list");
 
 
         // Searchbar
@@ -165,6 +181,10 @@ public class HomeWindow
 
         // Set Scene
         scene = new Scene(borderPane);
+        scene.getStylesheets().add(
+                getClass().getResource("/styles/main.css").toExternalForm()
+        );
+
         window.setScene(scene);
         window.show();
     }

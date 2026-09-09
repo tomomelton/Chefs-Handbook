@@ -1,0 +1,20 @@
+.root {
+    -fx-background-color: linear-gradient(#d4ccbd, #c0beb8);
+    -fx-text-fill: #a02d28;
+}
+
+.label {
+    -fx-text-fill: #a02d28;
+}
+
+#recipe {
+    -fx-border-color: #a02d28;
+    -fx-border-width: 3;
+    -fx-border-radius: 10;
+    -fx-text-fill: #a02d28;
+}
+
+#left-menu {
+
+}
+

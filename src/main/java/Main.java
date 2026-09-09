@@ -18,7 +18,7 @@ public class Main extends Application
         StartWindow.load();
 
         // Temp fix while VPN is down
-//        new HomeWindow(new User("Tom", "1"));
+//        new HomeWindow(new User("Tom", 1));
     }
 
 

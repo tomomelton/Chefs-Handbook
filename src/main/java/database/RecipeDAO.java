@@ -140,4 +140,24 @@ public class RecipeDAO
         }
 
     }
+
+    public static void deleteRecipe(Recipe recipe)
+    {
+        String sql =
+                """
+                DELETE FROM recipes
+                WHERE recipeID = ?;
+                """;
+
+        try( PreparedStatement statement = conn.prepareStatement(sql))
+        {
+            statement.setInt(1, recipe.getRecipeID());
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }
