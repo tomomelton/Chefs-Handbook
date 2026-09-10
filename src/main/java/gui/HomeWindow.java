@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import models.Recipe;
@@ -75,6 +76,18 @@ public class HomeWindow
 
     // Buttons
     private Button newRecipeButton;
+
+    // Menus
+    private MenuBar menuBar;
+    private Menu userMenu;
+    private Menu fileMenu;
+
+    // Menu Items
+    private MenuItem changeUserMenuItem;
+    private MenuItem createUserMenuItem;
+    private MenuItem exitMenuItem;
+    private MenuItem importMenuItem;
+    private MenuItem exportMenuItem;
 
     // Tooltips
     private static final Tooltip newRecipeTooltip = new Tooltip("New recipe");
@@ -173,13 +186,35 @@ public class HomeWindow
         newRecipeButton.getStyleClass().add("red-button");
 
 
+        // Menus
+        userMenu = new Menu();
+        userMenu.setGraphic(new FontIcon(FontAwesomeSolid.USER));
+
+        fileMenu = new Menu();
+        fileMenu.setGraphic(new FontIcon(FontAwesomeSolid.FILE));
+
+        menuBar = new MenuBar(userMenu, fileMenu);
+
+
+        // Menu Items
+        changeUserMenuItem = new MenuItem("Switch User");
+        createUserMenuItem = new MenuItem("New User");
+        exitMenuItem = new MenuItem("Exit");
+
+        importMenuItem = new MenuItem("Import");
+        exportMenuItem = new MenuItem("Export");
+
+        userMenu.getItems().addAll(changeUserMenuItem, createUserMenuItem, exitMenuItem);
+        fileMenu.getItems().addAll(importMenuItem, exportMenuItem);
+
+
         // Tooltips
         Tooltip.install(newRecipeButton, newRecipeTooltip);
         newRecipeTooltip.setShowDelay(Duration.seconds(0.25));
 
 
         // Build Layouts
-        topMenu.getChildren().add(welcomeLabel);
+        topMenu.getChildren().addAll(menuBar, welcomeLabel);
         leftMenu.getChildren().addAll(recipeLabel, searchRow, recipeList);
         searchRow.getChildren().addAll(recipeSearch, newRecipeButton);
 
