@@ -43,6 +43,7 @@ public class RecipeLayout extends VBox
     // Layouts
     private final HBox titleRow;
     private final HBox scaleRow;
+    private final VBox contentBox;
 
     // Labels
     private final Label nameLabel;
@@ -51,6 +52,9 @@ public class RecipeLayout extends VBox
     private final Label directionsHeading;
     private final Label directionsContent;
     private final Label scaleLabel;
+
+    // ScrollPane
+    private final ScrollPane scrollPane;
 
     // Text Fields
     private final TextField scaleInput;
@@ -80,16 +84,18 @@ public class RecipeLayout extends VBox
         nameLabel.setStyle("-fx-font-size: 20");
 
         ingredientsHeading = new Label("Ingredients:\n\n");
-        ingredientsHeading.setStyle("-fx-font-size: 18; -fx-font-weight: bold");
+        ingredientsHeading.getStyleClass().add("subheading-text");
 
         ingredientsContent = new Label(this.recipe.getIngredients());
-        ingredientsContent.setStyle("-fx-font-size: 13");
+        ingredientsContent.getStyleClass().add("content-text");
+        ingredientsContent.setWrapText(true);
 
         directionsHeading = new Label("Directions:\n\n");
-        directionsHeading.setStyle("-fx-font-size: 18; -fx-font-weight: bold");
+        directionsHeading.getStyleClass().add("subheading-text");
 
         directionsContent = new Label(recipe.getDirections());
-        directionsContent.setStyle("-fx-font-size: 13");
+        directionsContent.getStyleClass().add("content-text");
+        directionsContent.setWrapText(true);
 
         scaleLabel = new Label("Scale Multiplier:");
         scaleLabel.setStyle("-fx-font-size: 15");
@@ -144,14 +150,29 @@ public class RecipeLayout extends VBox
         scaleRow.getChildren().addAll(scaleLabel, scaleInput, setScaleButton, resetScaleButton);
 
 
+        // Content Box
+        contentBox = new VBox(5);
+        contentBox.getChildren().addAll(
+                ingredientsHeading, ingredientsContent,
+                directionsHeading, directionsContent
+        );
+
+
+        // Scroll Pane
+        scrollPane = new ScrollPane(contentBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+
         // Layout
         setPadding(new Insets(20, 20, 20, 20));
 
         getChildren().addAll(
                 titleRow,
                 scaleRow,
-                ingredientsHeading, ingredientsContent,
-                directionsHeading, directionsContent
+                scrollPane
         );
 
         setId("recipe");
