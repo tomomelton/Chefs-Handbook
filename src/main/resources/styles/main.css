@@ -7,6 +7,18 @@
     -fx-text-fill: #a02d28;
 }
 
+.red-label {
+    -fx-padding: 5 20 5 20;
+    -fx-text-fill: #d4ccbd;
+    -fx-background-color: #a02d28;
+    -fx-background-radius: 8;
+    /*-fx-border-color: #a02d28;*/
+    /*-fx-border-width: 3;*/
+    /*-fx-border-radius: 8;*/
+    -fx-font-size: 25;
+    -fx-font-weight: bold;
+}
+
 #recipe {
     -fx-border-color: #a02d28;
     -fx-border-width: 3;
@@ -14,7 +26,45 @@
     -fx-text-fill: #a02d28;
 }
 
-#left-menu {
-
+.field-border {
+    -fx-border-color: #a02d28;
+    -fx-border-radius: 3;
+    -fx-border-width: 2;
 }
 
+.red-button {
+    -fx-text-fill: #d4ccbd;
+    -fx-background-color: #a02d28;
+    -fx-border-color: #a02d28;
+    -fx-border-radius: 3;
+}
+
+.red-button .ikonli-font-icon {
+    -fx-icon-color: #d4ccbd;
+}
+
+
+.text-area:focused, .text-field:focused, .list-view:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+.list-view {
+    -fx-border-width: 3;
+    -fx-padding: 0;
+}
+
+.list-cell {
+    -fx-text-fill: #a02d28;
+}
+
+.list-cell:focused, .list-cell:selected {
+    -fx-background-insets: 0;
+    -fx-background-color: #a02d28;
+    -fx-border-color: #a02d28;
+    -fx-text-fill: #d4ccbd;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: none;
+}

@@ -62,12 +62,15 @@ public class RecipeEditor extends VBox
         // Text Editors
         nameField = new TextField();
         nameField.setPromptText("Recipe name...");
+        nameField.getStyleClass().add("field-border");
 
         ingredientsField = new TextArea();
         ingredientsField.setPromptText("Ingredient 1...  Ingredient 2...  Ingredient 3...");
+        ingredientsField.getStyleClass().add("field-border");
 
         directionsField = new TextArea();
         directionsField.setPromptText("Step 1...  Step 2...  Step 3...");
+        directionsField.getStyleClass().add("field-border");
 
 
         // Labels
@@ -82,10 +85,12 @@ public class RecipeEditor extends VBox
         saveButton = new Button();
         saveButton.setGraphic(new FontIcon(FontAwesomeSolid.SAVE));
         saveButton.setOnAction(e -> save());
+        saveButton.getStyleClass().add("red-button");
 
         cancelButton = new Button();
         cancelButton.setGraphic(new FontIcon(FontAwesomeSolid.TIMES));
         cancelButton.setOnAction(e -> cancel());
+        cancelButton.getStyleClass().add("red-button");
 
 
         // Tooltips
@@ -132,7 +137,11 @@ public class RecipeEditor extends VBox
     {
         ConfirmationBox confirmationBox = new ConfirmationBox("Are you want to cancel?");
 
-        if (confirmationBox.getResponse()) parent.resetRecipe();
+        if (confirmationBox.getResponse())
+        {
+            parent.resetRecipe();
+            parent.setEditing(false);
+        }
     }
 
     private void save()
@@ -158,6 +167,7 @@ public class RecipeEditor extends VBox
             // Reset and refresh
             parent.resetRecipe();
             parent.getRecipeLayout().refresh();
+            parent.setEditing(false);
 
             // Update recipe in database
             RecipeDAO.updateRecipe(recipe);

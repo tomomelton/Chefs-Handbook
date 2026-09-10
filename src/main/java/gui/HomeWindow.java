@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -46,6 +47,7 @@ public class HomeWindow
 {
     private final User user;
     private RecipeLayout recipeLayout;
+    private boolean editing;
 
     // Window
     private Stage window;
@@ -83,6 +85,8 @@ public class HomeWindow
     {
         this.user = user;
 
+        editing = false;
+
         // Window
         window = new Stage();
         window.setTitle("Chefs Handbook - " + this.user.getUsername());
@@ -97,23 +101,25 @@ public class HomeWindow
         topMenu = new HBox(10);
         topMenu.setAlignment(Pos.CENTER);
         topMenu.setPadding(new Insets(20, 20, 20, 20));
-        topMenu.setStyle("-fx-background-color: #d3d3d3");
 
         leftMenu = new VBox(10);
         leftMenu.setAlignment(Pos.TOP_CENTER);
         leftMenu.setPadding(new Insets(20, 20, 20, 20));
         leftMenu.setId("left-menu");
-//        leftMenu.setStyle("-fx-background-color: #e0e0e0");
 
         searchRow = new HBox(5);
+        searchRow.setAlignment(Pos.BASELINE_CENTER);
 
 
         // Labels
-        welcomeLabel = new Label("Welcome " + this.user.getUsername() + "!");
-        welcomeLabel.setStyle("-fx-font-size: 25; -fx-font-weight: bold;");
+        welcomeLabel = new Label(this.user.getUsername() + "'s Handbook");
+        welcomeLabel.getStyleClass().add("red-label");
 
         recipeLabel = new Label("Recipes");
-        recipeLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+        recipeLabel.getStyleClass().add("red-label");
+        recipeLabel.setStyle("-fx-font-size: 20;");
+        recipeLabel.setMaxWidth(Double.MAX_VALUE);
+        recipeLabel.setAlignment(Pos.CENTER);
 
 
         // Lists
@@ -139,13 +145,16 @@ public class HomeWindow
         recipeList = new ListView<>(filteredRecipes);
         recipeList.setStyle("-fx-font-size: 15");
         recipeList.setCellFactory(list -> new RecipeListCell());
-        recipeList.setOnMouseClicked(e -> displayRecipe());
-        recipeList.setId("recipe-list");
+        recipeList.setOnMouseClicked(e -> {if (!editing) displayRecipe();});
+        recipeList.getStyleClass().add("field-border");
+        recipeList.getSelectionModel().clearSelection();
+        VBox.setVgrow(recipeList, Priority.ALWAYS);
 
 
         // Searchbar
         recipeSearch = new TextField();
         recipeSearch.setPromptText("Search recipes...");
+        recipeSearch.getStyleClass().add("field-border");
         recipeSearch.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
 
@@ -161,6 +170,7 @@ public class HomeWindow
         newRecipeButton = new Button();
         newRecipeButton.setGraphic(new FontIcon("fas-plus"));
         newRecipeButton.setOnAction(e -> newRecipe());
+        newRecipeButton.getStyleClass().add("red-button");
 
 
         // Tooltips
@@ -201,6 +211,10 @@ public class HomeWindow
 
     public User getUser() {
         return user;
+    }
+
+    public void setEditing(boolean editing) {
+        this.editing = editing;
     }
 
     // Button Methods

@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -75,7 +76,8 @@ public class RecipeLayout extends VBox
 
         // Labels
         nameLabel = new Label(recipe.getName());
-        nameLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold");
+        nameLabel.getStyleClass().add("red-label");
+        nameLabel.setStyle("-fx-font-size: 20");
 
         ingredientsHeading = new Label("Ingredients:\n\n");
         ingredientsHeading.setStyle("-fx-font-size: 18; -fx-font-weight: bold");
@@ -96,22 +98,27 @@ public class RecipeLayout extends VBox
         // Text Fields
         scaleInput = new TextField("1.0");
         scaleInput.setMinWidth(5);
+        scaleInput.getStyleClass().add("field-border");
 
 
         // Buttons
         editButton = new Button();
         editButton.setGraphic(new FontIcon(FontAwesomeSolid.PEN));
         editButton.setOnAction(e -> edit());
+        editButton.getStyleClass().add("red-button");
 
         deleteButton = new Button();
         deleteButton.setGraphic(new FontIcon(FontAwesomeSolid.TRASH));
         deleteButton.setOnAction(e -> delete());
+        deleteButton.getStyleClass().add("red-button");
 
         setScaleButton = new Button("Set");
         setScaleButton.setOnAction(e -> setScale());
+        setScaleButton.getStyleClass().add("red-button");
 
         resetScaleButton = new Button("Reset");
         resetScaleButton.setOnAction(e -> resetScale());
+        resetScaleButton.getStyleClass().add("red-button");
 
 
         // Tooltips
@@ -133,6 +140,7 @@ public class RecipeLayout extends VBox
 
         // Scale Row
         scaleRow = new HBox(5);
+        scaleRow.setAlignment(Pos.CENTER_LEFT);
         scaleRow.getChildren().addAll(scaleLabel, scaleInput, setScaleButton, resetScaleButton);
 
 
@@ -154,7 +162,7 @@ public class RecipeLayout extends VBox
     private void edit()
     {
         parent.setCenter(new RecipeEditor(parent, recipe));
-
+        parent.setEditing(true);
     }
 
     private void delete()
