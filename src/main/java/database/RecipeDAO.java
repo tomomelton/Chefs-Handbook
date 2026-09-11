@@ -35,16 +35,20 @@ public class RecipeDAO
         // method to insert recipe object into the database
 
         String name, ingredients, directions;
+        double servingSize;
+
+        recipe.resetMultiplier();
 
         name = recipe.getName();
         ingredients = recipe.getIngredients();
         directions = recipe.getDirections();
+        servingSize = recipe.getServingSize();
 
 
         String sql =
                 """
-                INSERT INTO recipes (userID, name, ingredients, directions)
-                VALUES(?, ?, ?, ?)
+                INSERT INTO recipes (userID, name, ingredients, directions, servingSize)
+                VALUES(?, ?, ?, ?, ?)
                 """;
 
         try( PreparedStatement statement = conn.prepareStatement(sql))
@@ -53,6 +57,7 @@ public class RecipeDAO
             statement.setString(2, name);
             statement.setString(3, ingredients);
             statement.setString(4, directions);
+            statement.setDouble(5, servingSize);
 
             statement.executeUpdate();
         }
@@ -67,19 +72,22 @@ public class RecipeDAO
         // method to insert recipe object into the database
 
         String name, ingredients, directions;
+        double servingSize;
         int recipeID;
 
+        recipe.resetMultiplier();
 
         name = recipe.getName();
         ingredients = recipe.getIngredients();
         directions = recipe.getDirections();
+        servingSize = recipe.getServingSize();
         recipeID = recipe.getRecipeID();
 
 
         String sql =
                 """
                 UPDATE recipes
-                SET (name, ingredients, directions) = (?, ?, ?)
+                SET (name, ingredients, directions, servingSize) = (?, ?, ?, ?)
                 WHERE recipeid = ?;
                 """;
 
@@ -88,7 +96,8 @@ public class RecipeDAO
             statement.setString(1, name);
             statement.setString(2, ingredients);
             statement.setString(3, directions);
-            statement.setInt(4, recipeID);
+            statement.setDouble(4, servingSize);
+            statement.setInt(5, recipeID);
 
             statement.executeUpdate();
         }
@@ -129,7 +138,8 @@ public class RecipeDAO
                         resultSet.getInt("recipeID"),
                         resultSet.getString("name"),
                         resultSet.getString("ingredients"),
-                        resultSet.getString("directions")
+                        resultSet.getString("directions"),
+                        resultSet.getDouble("servingSize")
                 ));
             }
             return recipes;

@@ -51,6 +51,7 @@ public class RecipeLayout extends VBox
     private final Label directionsHeading;
     private final Label directionsContent;
     private final Label scaleLabel;
+    private final Label servingSizeLabel;
 
     // ScrollPane
     private final ScrollPane scrollPane;
@@ -81,6 +82,9 @@ public class RecipeLayout extends VBox
         nameLabel = new Label(recipe.getName());
         nameLabel.getStyleClass().add("red-label");
         nameLabel.setStyle("-fx-font-size: 20");
+
+        servingSizeLabel = new Label("Serves: " + recipe.getServingSize());
+        servingSizeLabel.getStyleClass().add("content-text");
 
         ingredientsHeading = new Label("Ingredients:\n\n");
         ingredientsHeading.getStyleClass().add("subheading-text");
@@ -171,6 +175,7 @@ public class RecipeLayout extends VBox
         getChildren().addAll(
                 titleRow,
                 scaleRow,
+                servingSizeLabel,
                 scrollPane
         );
 
@@ -223,6 +228,7 @@ public class RecipeLayout extends VBox
     {
         // Sets labels with current recipe information
         nameLabel.setText(recipe.getName());
+        servingSizeLabel.setText("Serves: " + recipe.getServingSize());
         ingredientsContent.setText(recipe.getIngredients());
         directionsContent.setText(recipe.getDirections());
     }
