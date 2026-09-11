@@ -13,7 +13,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.User;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,7 @@ import static database.UserDAO.getUser;
 
  Description : Static class to build a register GUI to create a new user
 
- History     : 02/09/2026 - v1.00
+ History     : 11/09/2026 - v2.00
  ******************************************************************************/
 
 public class RegisterWindow
@@ -61,13 +64,17 @@ public class RegisterWindow
 
     // Fields
     private static TextField nameInput;
-    private static PasswordField passInput;
-    private static PasswordField passConfInput;
+    private static TextField passVisibleInput;
+    private static TextField passConfVisibleInput;
+    private static PasswordField passHiddenInput;
+    private static PasswordField passConfHiddenInput;
 
     // Lists
     private static List<Label> errorLabels;
 
     // Buttons
+    private static Button showPasswordButton;
+    private static Button showConfirmPasswordButton;
     private static Button registerButton;
     private static Button cancelButton;
 
@@ -75,63 +82,39 @@ public class RegisterWindow
     // Public Methods
     public static User load()
     {
-        // Window
-        window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Chefs Handbook - Register");
-        window.setMinHeight(250);
-        window.setMinWidth(400);
-
-        // Grid
-        grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
-        grid.setAlignment(Pos.CENTER);
-
-
-        // Name label
+        // Labels
         nameLabel = new Label("*Username: ");
-        GridPane.setConstraints(nameLabel, 0, 0);
-
-        // Name input
-        nameInput = new TextField();
-        GridPane.setConstraints(nameInput, 1, 0);
-
-
-        // Password label
         passLabel = new Label("*Password: ");
-        GridPane.setConstraints(passLabel, 0, 1);
-
-        // Password input
-        passInput = new PasswordField();
-        GridPane.setConstraints(passInput, 1, 1);
-
-
-        // Password confirm label
         passConfLabel = new Label("*Confirm Password: ");
-        GridPane.setConstraints(passConfLabel, 0, 2);
-
-        // Password confirm input
-        passConfInput = new PasswordField();
-        GridPane.setConstraints(passConfInput, 1, 2);
-
-
-        // Error labels
-        errorLabels = new ArrayList<>();
-
-        // Taken username label
         takenLabel = new Label("Username already taken");
-        errorLabels.add(takenLabel);
-
-        // Password match label
         matchLabel = new Label("Passwords do not match");
-        errorLabels.add(matchLabel);
+        validPassLabel = new Label("Password must be at least 8 characters and contain a special character");
+        validPassLabel.setWrapText(true);
 
-        // Invalid password label
-        validPassLabel = new Label("Password must be at least 8 characters\nand contain a special character");
+
+        // Fields
+        nameInput = new TextField();
+
+        passVisibleInput = new TextField();
+        passVisibleInput.setVisible(false);
+
+        passConfVisibleInput = new TextField();
+        passConfVisibleInput.setVisible(false);
+
+        passHiddenInput = new PasswordField();
+        passHiddenInput.textProperty().bindBidirectional(passVisibleInput.textProperty());
+
+        passConfHiddenInput = new PasswordField();
+        passConfHiddenInput.textProperty().bindBidirectional(passConfVisibleInput.textProperty());
+
+
+        // Lists
+        errorLabels = new ArrayList<>();
+        errorLabels.add(takenLabel);
+        errorLabels.add(matchLabel);
         errorLabels.add(validPassLabel);
 
+        // Configure labels
         for (Label label : errorLabels)
         {
             label.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
@@ -141,33 +124,62 @@ public class RegisterWindow
 
 
         // Buttons
-        buttons = new HBox(10);
-
-        // Register button
         registerButton = new Button("Register");
         registerButton.setOnAction(e -> register());
 
-        // Cancel button
         cancelButton = new Button("Cancel");
         cancelButton.setOnAction(e -> window.close());
 
+        showPasswordButton = new Button("Show");
+        showPasswordButton.setOnAction(e -> togglePasswordVisible(
+                showPasswordButton, passHiddenInput, passVisibleInput
+        ));
+
+        showConfirmPasswordButton = new Button("Show");
+        showConfirmPasswordButton.setOnAction(e -> togglePasswordVisible(
+                showConfirmPasswordButton, passConfHiddenInput, passConfVisibleInput
+        ));
+
+
+        // Layouts
+        buttons = new HBox(10);
         buttons.getChildren().addAll(registerButton, cancelButton);
-        GridPane.setConstraints(buttons, 1, 3);
 
-
-
-
+        grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+        grid.setAlignment(Pos.CENTER);
+        grid.getChildren().addAll(errorLabels);
         grid.getChildren().addAll(
                 nameLabel, nameInput,
-                passLabel, passInput,
-                passConfLabel, passConfInput,
+                passLabel, passHiddenInput, passVisibleInput, showPasswordButton,
+                passConfLabel, passConfHiddenInput, passConfVisibleInput, showConfirmPasswordButton,
                 buttons
         );
 
-        grid.getChildren().addAll(errorLabels);
 
+        // Grid
+        GridPane.setConstraints(nameLabel,                  0, 0);
+        GridPane.setConstraints(nameInput,                  1, 0);
+        GridPane.setConstraints(passLabel,                  0, 1);
+        GridPane.setConstraints(passHiddenInput,            1, 1);
+        GridPane.setConstraints(passVisibleInput,           1, 1);
+        GridPane.setConstraints(showPasswordButton,         2, 1);
+        GridPane.setConstraints(passConfLabel,              0, 2);
+        GridPane.setConstraints(passConfHiddenInput,        1, 2);
+        GridPane.setConstraints(passConfVisibleInput,       1, 2);
+        GridPane.setConstraints(showConfirmPasswordButton,  2, 2);
+        GridPane.setConstraints(buttons,                    1, 3);
+
+
+        // Window
         scene = new Scene(grid);
-
+        window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Chefs Handbook - Register");
+        window.setMinHeight(250);
+        window.setMinWidth(400);
         window.setScene(scene);
         window.showAndWait();
 
@@ -181,14 +193,14 @@ public class RegisterWindow
         User tempUser = getUser(nameInput.getText());
 
         // Check password entries are the same
-        if (!passInput.getText().equals(passConfInput.getText()))
+        if (!passHiddenInput.getText().equals(passConfHiddenInput.getText()))
         {
             takenLabel.setVisible(false);
             matchLabel.setVisible(true);
             validPassLabel.setVisible(false);
 
-            passInput.clear();
-            passConfInput.clear();
+            passHiddenInput.clear();
+            passConfHiddenInput.clear();
         }
         // Check username isn't taken
         else if (tempUser != null)
@@ -200,27 +212,38 @@ public class RegisterWindow
             nameInput.clear();
         }
         // Check password is valid
-        else if (!validatePassword(passInput.getText()))
+        else if (!validatePassword(passHiddenInput.getText()))
         {
             takenLabel.setVisible(false);
             matchLabel.setVisible(false);
             validPassLabel.setVisible(true);
 
-            passInput.clear();
-            passConfInput.clear();
+            passHiddenInput.clear();
+            passConfHiddenInput.clear();
         }
         // Create user
         else
         {
             createUser(
                     nameInput.getText(),
-                    passInput.getText()
+                    passHiddenInput.getText()
             );
 
             user = getUser(nameInput.getText());
 
             window.close();
         }
+    }
+
+    private static void togglePasswordVisible(Button button, PasswordField passwordField, TextField visiblePassword)
+    {
+        boolean showing = visiblePassword.isVisible();
+
+        visiblePassword.setVisible(!showing);
+
+        passwordField.setVisible(showing);
+
+        button.setText(showing ? "Show" : "Hide");
     }
 
 
