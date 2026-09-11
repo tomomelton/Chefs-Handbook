@@ -23,6 +23,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import models.Recipe;
 import models.User;
 
+import gui.StartWindow;
+
 import java.util.NoSuchElementException;
 
 import static database.RecipeDAO.userRecipes;
@@ -198,10 +200,16 @@ public class HomeWindow
 
         // Menu Items
         changeUserMenuItem = new MenuItem("Switch User");
+        changeUserMenuItem.setOnAction(e -> changeUser());
+
         createUserMenuItem = new MenuItem("New User");
+        createUserMenuItem.setOnAction(e -> newUser());
+
         exitMenuItem = new MenuItem("Exit");
+        exitMenuItem.setOnAction(e -> exit());
 
         importMenuItem = new MenuItem("Import");
+
         exportMenuItem = new MenuItem("Export");
 
         userMenu.getItems().addAll(changeUserMenuItem, createUserMenuItem, exitMenuItem);
@@ -252,6 +260,7 @@ public class HomeWindow
         this.editing = editing;
     }
 
+
     // Button Methods
     private void displayRecipe()
     {
@@ -268,6 +277,33 @@ public class HomeWindow
     {
         recipeLayout = null;
         borderPane.setCenter(new RecipeEditor(this));
+    }
+
+
+    // Menu Methods
+    private void exit()
+    {
+        window.close();
+        StartWindow.load();
+    }
+
+    private void changeUser()
+    {
+        User user = LoginWindow.load();
+        if (user != null)
+        {
+            window.close();
+            new HomeWindow(user);
+        }    }
+
+    private void newUser()
+    {
+        User user = RegisterWindow.load();
+        if (user != null)
+        {
+            window.close();
+            new HomeWindow(user);
+        }
     }
 
     // Public Methods
