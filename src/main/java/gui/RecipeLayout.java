@@ -36,7 +36,6 @@ import static database.RecipeDAO.deleteRecipe;
 
 public class RecipeLayout extends VBox
 {
-
     private final Recipe recipe;
     private final HomeWindow parent;
 
