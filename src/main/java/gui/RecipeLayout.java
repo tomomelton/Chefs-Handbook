@@ -83,7 +83,7 @@ public class RecipeLayout extends VBox
         nameLabel.getStyleClass().add("red-label");
         nameLabel.setStyle("-fx-font-size: 20");
 
-        servingSizeLabel = new Label("Serves: " + recipe.getServingSize());
+        servingSizeLabel = new Label("Serves: " + recipe.getServingSizeString());
         servingSizeLabel.getStyleClass().add("content-text");
 
         ingredientsHeading = new Label("Ingredients:\n\n");
@@ -105,7 +105,7 @@ public class RecipeLayout extends VBox
 
 
         // Text Fields
-        scaleInput = new TextField("1.0");
+        scaleInput = new TextField(recipe.getMultiplierString());
         scaleInput.setMinWidth(5);
         scaleInput.getStyleClass().add("field-border");
 
@@ -215,7 +215,7 @@ public class RecipeLayout extends VBox
 
     private void resetScale()
     {
-        scaleInput.setText("1.0");
+        scaleInput.setText("1");
 
         recipe.resetMultiplier();
 
@@ -228,7 +228,7 @@ public class RecipeLayout extends VBox
     {
         // Sets labels with current recipe information
         nameLabel.setText(recipe.getName());
-        servingSizeLabel.setText("Serves: " + recipe.getServingSize());
+        servingSizeLabel.setText("Serves: " + recipe.getServingSizeString());
         ingredientsContent.setText(recipe.getIngredients());
         directionsContent.setText(recipe.getDirections());
     }

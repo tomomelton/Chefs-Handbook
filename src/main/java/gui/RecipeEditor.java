@@ -36,6 +36,7 @@ public class RecipeEditor extends VBox
 
     // Text Editors
     private TextField nameField;
+    private TextField servingSizeField;
     private TextArea ingredientsField;
     private TextArea directionsField;
 
@@ -63,6 +64,10 @@ public class RecipeEditor extends VBox
         nameField = new TextField();
         nameField.setPromptText("Recipe name...");
         nameField.getStyleClass().add("field-border");
+
+        servingSizeField = new TextField();
+        servingSizeField.setPromptText("Serving size...");
+        servingSizeField.getStyleClass().add("field-border");
 
         ingredientsField = new TextArea();
         ingredientsField.setPromptText("Ingredient 1...  Ingredient 2...  Ingredient 3...");
@@ -107,7 +112,7 @@ public class RecipeEditor extends VBox
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        topRow.getChildren().addAll(nameField, spacer, saveButton, cancelButton);
+        topRow.getChildren().addAll(nameField, servingSizeField, spacer, saveButton, cancelButton);
 
 
         // Layout
@@ -127,6 +132,7 @@ public class RecipeEditor extends VBox
 
         // Text Editors
         nameField.setText(recipe.getName());
+        servingSizeField.setText(recipe.getServingSizeString());
         ingredientsField.setText(recipe.getIngredients());
         directionsField.setText(recipe.getDirections());
     }
@@ -184,6 +190,7 @@ public class RecipeEditor extends VBox
     {
         // Update recipe object
         recipe.setName(nameField.getText());
+        recipe.setServingSize(Double.parseDouble(servingSizeField.getText()));
         recipe.setIngredients(ingredientsField.getText());
         recipe.setDirections(directionsField.getText());
     }

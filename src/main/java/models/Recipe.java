@@ -76,6 +76,12 @@ public class Recipe
         return multiplier;
     }
 
+    public String getMultiplierString()
+    {
+        // Method to return multiplier as a string, formatting to remove decimal places if whole
+        return multiplier % 1 == 0 ? String.valueOf((int) multiplier) : String.valueOf(multiplier);
+    }
+
     public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
     }
@@ -86,6 +92,15 @@ public class Recipe
 
     public double getServingSize() {
         return servingSize * multiplier;
+    }
+
+    public String getServingSizeString()
+    {
+        // Method to return serving size as a string, formatting to remove decimal places if whole
+
+        double servingSize = getServingSize();
+
+        return servingSize % 1 == 0 ? String.valueOf((int) servingSize) : String.valueOf(servingSize);
     }
 
     public void setServingSize(double servingSize) {
