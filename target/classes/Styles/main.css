@@ -84,7 +84,18 @@
     -fx-background-insets: 0;
     -fx-background-color: #a02d28;
     -fx-border-color: #a02d28;
-    -fx-text-fill: #d4ccbd;
+    -fx-text-fill: #fffd;
+    -fx-font-weight: bold;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: none;
+}
+
+.list-cell:hover {
+    -fx-background-insets: 0;
+    -fx-background-color: #B5302C;
+    -fx-border-color: #B5302C;
+    -fx-text-fill: #fffd;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-effect: none;
@@ -123,7 +134,7 @@
  }
 
 .menu:focused, .menu:hover, .menu:showing{
-    -fx-background-color: d4ccbd;
+    -fx-background-color: #d4ccbd;
     -fx-background-radius: 3;
 }
 
