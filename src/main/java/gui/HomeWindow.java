@@ -9,10 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -60,7 +57,7 @@ public class HomeWindow
 
     // Layouts
     private BorderPane borderPane;
-    private HBox topMenu;
+    private StackPane topMenu;
     private VBox leftMenu;
     private HBox searchRow;
 
@@ -113,7 +110,7 @@ public class HomeWindow
         borderPane = new BorderPane();
         borderPane.setPadding(new Insets(20, 20, 20, 20));
 
-        topMenu = new HBox(10);
+        topMenu = new StackPane();
         topMenu.setAlignment(Pos.CENTER);
         topMenu.setPadding(new Insets(20, 20, 20, 20));
 
@@ -129,6 +126,7 @@ public class HomeWindow
         // Labels
         welcomeLabel = new Label(this.user.getUsername() + "'s Handbook");
         welcomeLabel.getStyleClass().add("red-label");
+        StackPane.setAlignment(welcomeLabel, Pos.CENTER);
 
         recipeLabel = new Label("Recipes");
         recipeLabel.getStyleClass().add("red-label");
@@ -191,11 +189,15 @@ public class HomeWindow
         // Menus
         userMenu = new Menu();
         userMenu.setGraphic(new FontIcon(FontAwesomeSolid.USER));
+        userMenu.getStyleClass().add("red-button");
 
         fileMenu = new Menu();
         fileMenu.setGraphic(new FontIcon(FontAwesomeSolid.FILE));
+        fileMenu.getStyleClass().add("red-button");
 
         menuBar = new MenuBar(userMenu, fileMenu);
+        menuBar.setMaxWidth(Region.USE_PREF_SIZE);
+        StackPane.setAlignment(menuBar, Pos.CENTER_LEFT);
 
 
         // Menu Items
