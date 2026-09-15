@@ -23,6 +23,7 @@ import models.User;
 import gui.StartWindow;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import static database.RecipeDAO.userRecipes;
 
@@ -237,7 +238,7 @@ public class HomeWindow
         // Set Scene
         scene = new Scene(borderPane);
         scene.getStylesheets().add(
-                getClass().getResource("/styles/main.css").toExternalForm()
+                Objects.requireNonNull(getClass().getResource("/styles/main.css")).toExternalForm()
         );
 
         window.setScene(scene);

@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 
 import models.User;
 
+import java.util.Objects;
+
 import static database.UserDAO.getUser;
 import static utils.Hash.checkPassword;
 
@@ -38,56 +40,63 @@ public class LoginWindow
 {
     private static User user;
 
+    // Scene
+    private static Scene scene;
+
+    // Window
+    private static Stage window;
+
+    // Layouts
+    private static GridPane grid;
+    private static HBox buttons;
+
+    // Labels
+    private static Label nameLabel;
+    private static Label passLabel;
+    private static Label errorLabel;
+
+    // Fields
+    private static TextField nameInput;
+    private static TextField passInput;
+
+    // Buttons
+    private static Button loginButton;
+    private static Button cancelButton;
+
+
+    // Public Methods
     public static User load()
     {
-        // Window
-        Stage window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Chefs Handbook - Login");
-        window.setMinHeight(250);
-        window.setMinWidth(400);
-
-        // Grid
-        GridPane grid = new GridPane();
+        // Layouts
+        grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(8);
         grid.setHgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        // Name label
-        Label nameLabel = new Label("Username: ");
-        GridPane.setConstraints(nameLabel, 0, 0);
+        buttons = new HBox(10);
 
-        // Name input
-        TextField nameInput = new TextField();
+
+        // Labels
+        nameLabel = new Label("Username: ");
+        passLabel = new Label("Password: ");
+
+        errorLabel = new Label("Username or password incorrect");
+        errorLabel.setVisible(false);
+        errorLabel.getStyleClass().add("error");
+
+
+        // Fields
+        nameInput = new TextField();
         nameInput.setText("Tom");
-        GridPane.setConstraints(nameInput, 1, 0);
 
-        // Password label
-        Label passLabel = new Label("Password: ");
-        GridPane.setConstraints(passLabel, 0, 1);
-
-        // Password input
-        PasswordField passInput = new PasswordField();
+        passInput = new PasswordField();
         passInput.setPromptText("password");
         passInput.setText("password");
-        GridPane.setConstraints(passInput, 1, 1);
-
-        // Error label
-        Label errorLabel = new Label("Username or password incorrect");
-        errorLabel.setStyle(
-                "-fx-text-fill: red;" +
-                "-fx-font-weight: bold;"
-        );
-        errorLabel.setVisible(false);
-        GridPane.setConstraints(errorLabel, 1, 3);
 
 
         // Buttons
-        HBox buttons = new HBox(10);
-
-        // Login button
-        Button loginButton = new Button("Login");
+        loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
 
             boolean valid = login(nameInput.getText(), passInput.getText());
@@ -101,22 +110,39 @@ public class LoginWindow
             }
         });
 
-        // Cancel button
-        Button cancelButton = new Button("Cancel");
+        cancelButton = new Button("Cancel");
         cancelButton.setOnAction(e -> window.close());
 
-        buttons.getChildren().addAll(loginButton, cancelButton);
-        GridPane.setConstraints(buttons, 1, 2);
+
+        // Grid
+        GridPane.setConstraints(nameLabel,   0, 0);
+        GridPane.setConstraints(nameInput,   1, 0);
+        GridPane.setConstraints(passLabel,   0, 1);
+        GridPane.setConstraints(passInput,   1, 1);
+        GridPane.setConstraints(buttons,     1, 2);
+        GridPane.setConstraints(errorLabel,  1, 3);
 
 
-
-
+        // Build Layouts
         grid.getChildren().addAll(nameLabel, nameInput, passLabel, passInput, buttons, errorLabel);
+        buttons.getChildren().addAll(loginButton, cancelButton);
 
-        Scene scene = new Scene(grid);
 
+        // Scene
+        scene = new Scene(grid);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(LoginWindow.class.getResource("/styles/main.css")).toExternalForm()
+        );
+
+        // Window
+        window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Chefs Handbook - Login");
+        window.setMinHeight(250);
+        window.setMinWidth(400);
         window.setScene(scene);
         window.showAndWait();
+
 
         return user;
     }

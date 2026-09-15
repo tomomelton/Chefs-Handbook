@@ -19,6 +19,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static database.UserDAO.createUser;
 import static database.UserDAO.getUser;
@@ -117,7 +118,7 @@ public class RegisterWindow
         // Configure labels
         for (Label label : errorLabels)
         {
-            label.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+            label.getStyleClass().add("error");
             label.setVisible(false);
             GridPane.setConstraints(label, 1, 4);
         };
@@ -173,8 +174,14 @@ public class RegisterWindow
         GridPane.setConstraints(buttons,                    1, 3);
 
 
-        // Window
+        // Scene
         scene = new Scene(grid);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(RegisterWindow.class.getResource("/styles/main.css")).toExternalForm()
+        );
+
+
+        // Window
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Chefs Handbook - Register");

@@ -141,3 +141,9 @@
 .menu:focused .ikonli-font-icon, .menu:hover .ikonli-font-icon, .menu:showing .ikonli-font-icon {
     -fx-icon-color: #B5302C;
 }
+
+
+.error {
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+}
