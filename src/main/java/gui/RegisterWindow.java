@@ -127,6 +127,7 @@ public class RegisterWindow
         // Buttons
         registerButton = new Button("Register");
         registerButton.setOnAction(e -> register());
+        registerButton.setDefaultButton(true);
 
         cancelButton = new Button("Cancel");
         cancelButton.setOnAction(e -> window.close());

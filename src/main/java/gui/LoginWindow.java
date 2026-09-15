@@ -57,11 +57,13 @@ public class LoginWindow
 
     // Fields
     private static TextField nameInput;
-    private static TextField passInput;
+    private static TextField passVisibleInput;
+    private static PasswordField passHiddenInput;
 
     // Buttons
     private static Button loginButton;
     private static Button cancelButton;
+    private static Button showPasswordButton;
 
 
     // Public Methods
@@ -88,43 +90,63 @@ public class LoginWindow
 
         // Fields
         nameInput = new TextField();
+        nameInput.setPromptText("Enter Username...");
         nameInput.setText("Tom");
 
-        passInput = new PasswordField();
-        passInput.setPromptText("password");
-        passInput.setText("password");
+        passVisibleInput = new TextField();
+        passVisibleInput.setVisible(false);
+        passVisibleInput.setPromptText("Enter password...");
+        passVisibleInput.setText("password");
+
+        passHiddenInput = new PasswordField();
+        passHiddenInput.setVisible(true);
+        passHiddenInput.setPromptText("Enter password...");
+        passHiddenInput.setText("password");
+        passHiddenInput.textProperty().bindBidirectional(passVisibleInput.textProperty());
 
 
         // Buttons
         loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
 
-            boolean valid = login(nameInput.getText(), passInput.getText());
+            boolean valid = login(nameInput.getText(), passHiddenInput.getText());
 
             if (valid)
                 window.close();
             else
             {
                 errorLabel.setVisible(true);
-                passInput.clear();
+                passHiddenInput.clear();
             }
         });
+        loginButton.setDefaultButton(true);
 
         cancelButton = new Button("Cancel");
         cancelButton.setOnAction(e -> window.close());
 
+        showPasswordButton = new Button("Show");
+        showPasswordButton.setOnAction(e -> togglePasswordVisible(
+                showPasswordButton, passHiddenInput, passVisibleInput
+        ));
+
 
         // Grid
-        GridPane.setConstraints(nameLabel,   0, 0);
-        GridPane.setConstraints(nameInput,   1, 0);
-        GridPane.setConstraints(passLabel,   0, 1);
-        GridPane.setConstraints(passInput,   1, 1);
-        GridPane.setConstraints(buttons,     1, 2);
-        GridPane.setConstraints(errorLabel,  1, 3);
+        GridPane.setConstraints(nameLabel,             0, 0);
+        GridPane.setConstraints(nameInput,             1, 0);
+        GridPane.setConstraints(passLabel,             0, 1);
+        GridPane.setConstraints(passVisibleInput,      1, 1);
+        GridPane.setConstraints(passHiddenInput,       1, 1);
+        GridPane.setConstraints(showPasswordButton,    2, 1);
+        GridPane.setConstraints(buttons,               1, 2);
+        GridPane.setConstraints(errorLabel,            1, 3);
 
 
         // Build Layouts
-        grid.getChildren().addAll(nameLabel, nameInput, passLabel, passInput, buttons, errorLabel);
+        grid.getChildren().addAll(
+                nameLabel, nameInput,
+                passLabel, passVisibleInput, passHiddenInput, showPasswordButton,
+                buttons, errorLabel
+        );
         buttons.getChildren().addAll(loginButton, cancelButton);
 
 
@@ -147,6 +169,8 @@ public class LoginWindow
         return user;
     }
 
+
+    // Button Methods
     private static boolean login(String username, String password)
     {
         try
@@ -163,5 +187,16 @@ public class LoginWindow
             return false;
         }
 
+    }
+
+    private static void togglePasswordVisible(Button button, PasswordField passwordField, TextField visiblePassword)
+    {
+        boolean showing = visiblePassword.isVisible();
+
+        visiblePassword.setVisible(!showing);
+
+        passwordField.setVisible(showing);
+
+        button.setText(showing ? "Show" : "Hide");
     }
 }
