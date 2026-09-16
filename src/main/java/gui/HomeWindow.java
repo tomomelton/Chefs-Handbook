@@ -10,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -20,12 +19,11 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import models.Recipe;
 import models.User;
 
-import gui.StartWindow;
-
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static database.RecipeDAO.userRecipes;
+import static utils.FileHandling.toCSV;
 
 /******************************************************************************
 
@@ -81,13 +79,15 @@ public class HomeWindow
     private MenuBar menuBar;
     private Menu userMenu;
     private Menu fileMenu;
+    private Menu exportMenu;
 
     // Menu Items
     private MenuItem changeUserMenuItem;
     private MenuItem createUserMenuItem;
     private MenuItem exitMenuItem;
     private MenuItem importMenuItem;
-    private MenuItem exportMenuItem;
+    private MenuItem exportCSVMenuItem;
+    private MenuItem exportJSONMenuItem;
 
     // Tooltips
     private static final Tooltip newRecipeTooltip = new Tooltip("New recipe");
@@ -196,6 +196,9 @@ public class HomeWindow
         fileMenu.setGraphic(new FontIcon(FontAwesomeSolid.FILE));
         fileMenu.getStyleClass().add("red-button");
 
+        exportMenu = new Menu("Export");
+        exportMenu.getStyleClass().add("menu-item");
+
         menuBar = new MenuBar(userMenu, fileMenu);
         menuBar.setMaxWidth(Region.USE_PREF_SIZE);
         StackPane.setAlignment(menuBar, Pos.CENTER_LEFT);
@@ -213,10 +216,14 @@ public class HomeWindow
 
         importMenuItem = new MenuItem("Import");
 
-        exportMenuItem = new MenuItem("Export");
+        exportCSVMenuItem = new MenuItem("CSV");
+        exportCSVMenuItem.setOnAction(e -> toCSV(recipes));
 
+        exportJSONMenuItem = new MenuItem("JSON");
+
+        exportMenu.getItems().addAll(exportCSVMenuItem, exportJSONMenuItem);
         userMenu.getItems().addAll(changeUserMenuItem, createUserMenuItem, exitMenuItem);
-        fileMenu.getItems().addAll(importMenuItem, exportMenuItem);
+        fileMenu.getItems().addAll(importMenuItem, exportMenu);
 
 
         // Tooltips
