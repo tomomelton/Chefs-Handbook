@@ -9,59 +9,92 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.User;
 
+import java.util.Objects;
+
 
 public class StartWindow
 {
+    // Window
+    private static Stage window;
+
+    // Scene
+    private static Scene scene;
+
+    // Layouts
+    private static VBox layout;
+    private static HBox buttons;
+
+    // Labels
+    private static Label titleLabel;
+
+    // Buttons
+    private static Button loginButton;
+    private static Button registerButton;
+
+    // Public Methods
     public static void load()
     {
-        // Window
-        Stage window = new Stage();
-        window.setTitle("Chefs Handbook - Start");
-        window.setMinHeight(500);
-        window.setMinWidth(800);
-        window.setOnCloseRequest(e -> System.out.println("Goodbye!"));
-
-        // Welcome label
-        Label titleLabel = new Label("Welcome to Chefs Handbook!");
-        titleLabel.setStyle("-fx-font-size: 20;" + "-fx-font-weight: bold");
+        // Labels
+        titleLabel = new Label("Welcome to Chefs Handbook!");
+//        titleLabel.setStyle("-fx-font-size: 20;" + "-fx-font-weight: bold");
+        titleLabel.getStyleClass().add("red-label");
 
         // Buttons
-        HBox buttons = new HBox(10);
+        loginButton = new Button("Login");
+        loginButton.setOnAction(e -> login());
+        loginButton.setDefaultButton(true);
+        loginButton.getStyleClass().add("red-button");
+
+        registerButton = new Button("Register");
+        registerButton.setOnAction(e -> register());
+        registerButton.getStyleClass().add("red-button");
+
+
+        // Layouts
+        buttons = new HBox(10);
         buttons.setAlignment(Pos.CENTER);
-
-        // Login button
-        Button loginButton = new Button("Login");
-        loginButton.setOnAction(e -> {
-            User user = LoginWindow.load();
-            if (user != null)
-            {
-                window.close();
-                new HomeWindow(user);
-            }
-
-        });
-
-        // Register button
-        Button registerButton = new Button("Register");
-        registerButton.setOnAction(e -> {
-            User user = RegisterWindow.load();
-            if (user != null)
-            {
-                window.close();
-                new HomeWindow(user);
-            }
-        });
-
         buttons.getChildren().addAll(loginButton, registerButton);
 
-        // Layout
-        VBox layout = new VBox(10);
+        layout = new VBox(10);
         layout.getChildren().addAll(titleLabel, buttons);
         layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout);
 
+        // Scene
+        scene = new Scene(layout);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(StartWindow.class.getResource("/styles/main.css")).toExternalForm()
+        );
+
+
+        // Window
+        window = new Stage();
+        window.setTitle("Chefs Handbook - Start");
+        window.setMinHeight(500);
+        window.setMinWidth(800);
         window.setScene(scene);
         window.showAndWait();
+    }
+
+
+    // Button Methods
+    private static void login()
+    {
+        User user = LoginWindow.load();
+        if (user != null)
+        {
+            window.close();
+            new HomeWindow(user);
+        }
+    }
+
+    private static void  register()
+    {
+        User user = RegisterWindow.load();
+        if (user != null)
+        {
+            window.close();
+            new HomeWindow(user);
+        }
     }
 }
