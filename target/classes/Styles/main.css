@@ -73,6 +73,10 @@
 }
 
 
+.red-button:hover .ikonli-font-icon {
+    -fx-icon-color: #a02d28;
+}
+
 .text-area:focused, .text-field:focused, .list-view:focused {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
