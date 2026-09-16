@@ -71,10 +71,12 @@ public class RecipeEditor extends VBox
 
         ingredientsField = new TextArea();
         ingredientsField.setPromptText("Ingredient 1...  Ingredient 2...  Ingredient 3...");
+        ingredientsField.setWrapText(true);
         ingredientsField.getStyleClass().add("field-border");
 
         directionsField = new TextArea();
         directionsField.setPromptText("Step 1...  Step 2...  Step 3...");
+        directionsField.setWrapText(true);
         directionsField.getStyleClass().add("field-border");
 
 
