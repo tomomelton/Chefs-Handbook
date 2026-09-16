@@ -1,6 +1,7 @@
 package gui;
 
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,6 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 /******************************************************************************
 
@@ -52,34 +55,39 @@ public class ConfirmationBox
     // Constructor
     public ConfirmationBox(String message)
     {
-        // Layout
-        layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
-
-        buttons = new HBox(10);
-        buttons.setAlignment(Pos.CENTER);
-
-
         // Label
         this.message = new Label(message);
-        this.message.setStyle("-fx-font-size: 20; -fx-font-weight: bold");
+        this.message.getStyleClass().add("red-label");
 
 
         // Buttons
         confirmButton = new Button("Yes");
+        confirmButton.getStyleClass().add("red-button");
+        confirmButton.setDefaultButton(false);
         confirmButton.setOnAction(e -> {response = true; window.close();});
 
         cancelButton = new Button("No");
+        cancelButton.getStyleClass().add("red-button");
+        cancelButton.setDefaultButton(true);
         cancelButton.setOnAction(e -> {response = false; window.close();});
 
 
-        // Build Layout
-        layout.getChildren().addAll(this.message, buttons);
+        // Layout
+        buttons = new HBox(10);
+        buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(confirmButton, cancelButton);
+
+        layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.getChildren().addAll(this.message, buttons);
 
 
         // Scene
         scene = new Scene(layout);
+        scene.getStylesheets().add(
+            Objects.requireNonNull(ConfirmationBox.class.getResource("/styles/main.css")).toExternalForm()
+    );
 
 
         // Window
@@ -88,6 +96,7 @@ public class ConfirmationBox
         window.setMinWidth(350);
         window.setMinHeight(250);
         window.setScene(scene);
+        window.setOnShown(e -> cancelButton.requestFocus());
         window.showAndWait();
     }
 
