@@ -1,6 +1,7 @@
 package gui;
 
 
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -90,22 +91,26 @@ public class RegisterWindow
         takenLabel = new Label("Username already taken");
         matchLabel = new Label("Passwords do not match");
         validPassLabel = new Label("Password must be at least 8 characters and contain a special character");
-        validPassLabel.setWrapText(true);
 
 
         // Fields
         nameInput = new TextField();
+        nameInput.getStyleClass().add("field-border");
 
         passVisibleInput = new TextField();
+        passVisibleInput.getStyleClass().add("field-border");
         passVisibleInput.setVisible(false);
 
         passConfVisibleInput = new TextField();
+        passConfVisibleInput.getStyleClass().add("field-border");
         passConfVisibleInput.setVisible(false);
 
         passHiddenInput = new PasswordField();
+        passHiddenInput.getStyleClass().add("field-border");
         passHiddenInput.textProperty().bindBidirectional(passVisibleInput.textProperty());
 
         passConfHiddenInput = new PasswordField();
+        passConfHiddenInput.getStyleClass().add("field-border");
         passConfHiddenInput.textProperty().bindBidirectional(passConfVisibleInput.textProperty());
 
 
@@ -120,24 +125,33 @@ public class RegisterWindow
         {
             label.getStyleClass().add("error");
             label.setVisible(false);
-            GridPane.setConstraints(label, 1, 4);
+            label.setWrapText(true);
+            GridPane.setConstraints(label, 0, 4);
+            GridPane.setColumnSpan(label, 3);
+            GridPane.setHalignment(label, HPos.CENTER);
         };
 
 
         // Buttons
         registerButton = new Button("Register");
+        registerButton.getStyleClass().add("red-button");
         registerButton.setOnAction(e -> register());
         registerButton.setDefaultButton(true);
 
         cancelButton = new Button("Cancel");
+        cancelButton.getStyleClass().add("red-button");
         cancelButton.setOnAction(e -> window.close());
 
         showPasswordButton = new Button("Show");
+        showPasswordButton.getStyleClass().add("red-button");
+        showPasswordButton.setPrefWidth(55);
         showPasswordButton.setOnAction(e -> togglePasswordVisible(
                 showPasswordButton, passHiddenInput, passVisibleInput
         ));
 
         showConfirmPasswordButton = new Button("Show");
+        showConfirmPasswordButton.getStyleClass().add("red-button");
+        showConfirmPasswordButton.setPrefWidth(55);
         showConfirmPasswordButton.setOnAction(e -> togglePasswordVisible(
                 showConfirmPasswordButton, passConfHiddenInput, passConfVisibleInput
         ));

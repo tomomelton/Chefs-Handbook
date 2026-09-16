@@ -50,6 +50,7 @@
     -fx-border-color: #a02d28;
     -fx-border-radius: 3;
     -fx-border-width: 2;
+    -fx-pref-width: 200px;
 }
 
 .red-button {
@@ -57,7 +58,13 @@
     -fx-background-color: #a02d28;
     -fx-border-color: #a02d28;
     -fx-border-radius: 3;
+    -fx-border-width: 2;
     -fx-font-weight: bold;
+}
+
+.red-button:hover {
+    -fx-text-fill: #a02d28;
+    -fx-background-color: #d4ccbd;
 }
 
 
@@ -147,4 +154,5 @@
 .error {
     -fx-text-fill: red;
     -fx-font-weight: bold;
+    /*-fx-pref-width: 250px;*/
 }

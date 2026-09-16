@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -69,16 +70,6 @@ public class LoginWindow
     // Public Methods
     public static User load()
     {
-        // Layouts
-        grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
-        grid.setAlignment(Pos.CENTER);
-
-        buttons = new HBox(10);
-
-
         // Labels
         nameLabel = new Label("Username: ");
         passLabel = new Label("Password: ");
@@ -92,21 +83,26 @@ public class LoginWindow
         nameInput = new TextField();
         nameInput.setPromptText("Enter Username...");
         nameInput.setText("Tom");
+        nameInput.getStyleClass().add("field-border");
 
         passVisibleInput = new TextField();
         passVisibleInput.setVisible(false);
         passVisibleInput.setPromptText("Enter password...");
         passVisibleInput.setText("password");
+        passVisibleInput.getStyleClass().add("field-border");
 
         passHiddenInput = new PasswordField();
         passHiddenInput.setVisible(true);
         passHiddenInput.setPromptText("Enter password...");
         passHiddenInput.setText("password");
+        passHiddenInput.getStyleClass().add("field-border");
         passHiddenInput.textProperty().bindBidirectional(passVisibleInput.textProperty());
 
 
         // Buttons
         loginButton = new Button("Login");
+        loginButton.getStyleClass().add("red-button");
+        loginButton.setDefaultButton(true);
         loginButton.setOnAction(e -> {
 
             boolean valid = login(nameInput.getText(), passHiddenInput.getText());
@@ -119,15 +115,33 @@ public class LoginWindow
                 passHiddenInput.clear();
             }
         });
-        loginButton.setDefaultButton(true);
 
         cancelButton = new Button("Cancel");
+        cancelButton.getStyleClass().add("red-button");
         cancelButton.setOnAction(e -> window.close());
 
         showPasswordButton = new Button("Show");
+        showPasswordButton.getStyleClass().add("red-button");
+        showPasswordButton.setPrefWidth(55);
         showPasswordButton.setOnAction(e -> togglePasswordVisible(
                 showPasswordButton, passHiddenInput, passVisibleInput
         ));
+
+
+        // Layouts
+        buttons = new HBox(10);
+        buttons.getChildren().addAll(loginButton, cancelButton);
+
+        grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+        grid.setAlignment(Pos.CENTER);
+        grid.getChildren().addAll(
+                nameLabel, nameInput,
+                passLabel, passVisibleInput, passHiddenInput, showPasswordButton,
+                buttons, errorLabel
+        );
 
 
         // Grid
@@ -138,16 +152,10 @@ public class LoginWindow
         GridPane.setConstraints(passHiddenInput,       1, 1);
         GridPane.setConstraints(showPasswordButton,    2, 1);
         GridPane.setConstraints(buttons,               1, 2);
-        GridPane.setConstraints(errorLabel,            1, 3);
 
-
-        // Build Layouts
-        grid.getChildren().addAll(
-                nameLabel, nameInput,
-                passLabel, passVisibleInput, passHiddenInput, showPasswordButton,
-                buttons, errorLabel
-        );
-        buttons.getChildren().addAll(loginButton, cancelButton);
+        GridPane.setConstraints(errorLabel,            0, 3);
+        GridPane.setColumnSpan(errorLabel, 3);
+        GridPane.setHalignment(errorLabel, HPos.CENTER);
 
 
         // Scene
