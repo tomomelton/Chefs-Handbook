@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import static database.RecipeDAO.userRecipes;
 import static utils.FileHandling.toCSV;
+import static utils.FileHandling.toJSON;
 
 /******************************************************************************
 
@@ -220,6 +221,7 @@ public class HomeWindow
         exportCSVMenuItem.setOnAction(e -> toCSV(recipes));
 
         exportJSONMenuItem = new MenuItem("JSON");
+        exportJSONMenuItem.setOnAction(e -> toJSON(recipes));
 
         exportMenu.getItems().addAll(exportCSVMenuItem, exportJSONMenuItem);
         userMenu.getItems().addAll(changeUserMenuItem, createUserMenuItem, exitMenuItem);

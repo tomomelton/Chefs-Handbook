@@ -2,6 +2,8 @@ package utils;
 
 
 import models.Recipe;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,7 +45,6 @@ public class FileHandling
                         csvField(recipe.getDirections()) + "\n"
                 );
             }
-
         }
         catch (IOException e)
         {
@@ -52,9 +53,39 @@ public class FileHandling
         return true;
     }
 
-    public static void toJSON(Collection<Recipe> recipes)
+    public static boolean toJSON(Collection<Recipe> recipes)
     {
         // Exports a users recipes to a JSON file
+
+        JSONArray jsonRecipes = new JSONArray();
+        JSONObject jsonRecipe;
+
+        // Construct JSON file as a collection of recipes within a JSON array
+        for (Recipe recipe : recipes)
+        {
+            recipe.resetMultiplier();
+
+            jsonRecipe = new JSONObject();
+
+            jsonRecipe.put("name", recipe.getName());
+            jsonRecipe.put("ingredients", recipe.getIngredients());
+            jsonRecipe.put("directions", recipe.getDirections());
+            jsonRecipe.put("serves", recipe.getServingSize());
+
+            jsonRecipes.add(jsonRecipe);
+        }
+
+        // Write to file
+        try (FileWriter writer = new FileWriter("recipes.json"))
+        {
+            writer.write(jsonRecipes.toJSONString());
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
+
+        return true;
     }
 
 
