@@ -1,13 +1,17 @@
 package utils;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Recipe;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /******************************************************************************
@@ -35,7 +39,7 @@ public class FileHandling
         EXPORT, IMPORT
     }
 
-    public enum Export
+    public enum Extension
     {
         CSV, JSON
     }
@@ -48,7 +52,7 @@ public class FileHandling
 
         try (FileWriter writer = new FileWriter(file)) {
 
-            writer.write("Name,Ingredients,Directions,Serves\n");
+            writer.write("name,ingredients,directions,serves\n");
 
             for (Recipe recipe : recipes)
             {
@@ -104,12 +108,112 @@ public class FileHandling
         return true;
     }
 
+    public static Collection<Recipe> loadFile(File file) throws Exception
+    {
+        // Return a collection of recipes from a given file
+
+        // Turn file into collection of recipes
+        return switch (getExtension(file))
+        {
+            case CSV -> readCSV(file);
+            case JSON -> readJSON(file);
+        };
+    }
+
 
     // Support Methods
+    private static Collection<Recipe> readCSV(File file)
+    {
+        ArrayList<Recipe> recipes = new ArrayList<>();
+
+        try (FileReader reader = new FileReader(file))
+        {
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT
+                    .builder().setHeader().setSkipHeaderRecord(true).get().parse(reader);
+
+            Recipe recipe;
+
+            for (CSVRecord record : records)
+            {
+                // Compile recipe from record and add to recipes
+
+                recipe = new Recipe();
+                recipe.setName(record.get("name"));
+                recipe.setIngredients(record.get("ingredients"));
+                recipe.setDirections(record.get("directions"));
+                recipe.setServingSize(Double.parseDouble(record.get("serves")));
+
+                recipes.add(recipe);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+        return recipes;
+    }
+
+    private static Collection<Recipe> readJSON(File file)
+    {
+        ArrayList<Recipe> recipes = new ArrayList<>();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try
+        {
+            JsonNode json = mapper.readTree(file);
+
+            Recipe recipe;
+
+            for (JsonNode node : json)
+            {
+                recipe = new Recipe();
+                recipe.setName(node.get("name").asText());
+                recipe.setIngredients(node.get("ingredients").asText());
+                recipe.setDirections(node.get("directions").asText());
+                recipe.setServingSize(node.get("serves").asDouble());
+
+                recipes.add(recipe);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+        return recipes;
+    }
+
     private static String csvField(String value)
     {
         // Returns a CSV acceptable String
         // Wraps in quotes and escape any quotes inside them
         return "\"" + value.replace("\"", "\"\"") + "\"";
+    }
+
+    public static Extension getExtension(File file) throws Exception
+    {
+        // Extracts the extension of a file
+
+        String fileName = file.getName();
+
+        int dotIndex = fileName.lastIndexOf('.');
+
+        // handle cases with no extension or multiple dots
+        if (dotIndex == -1 || dotIndex == fileName.length() - 1)
+        {
+            // no extension found
+            throw new Exception("Invalid file extension");
+        }
+
+        // Return corresponding extension
+        return switch (fileName.substring(dotIndex + 1).toLowerCase())
+        {
+            case "csv" -> Extension.CSV;
+            case "json" -> Extension.JSON;
+            default ->
+                    throw new IllegalStateException(
+                            "Invalid file extension: " + fileName.substring(dotIndex + 1).toLowerCase()
+                    );
+        };
     }
 }

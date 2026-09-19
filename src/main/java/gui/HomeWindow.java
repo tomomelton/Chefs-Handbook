@@ -22,12 +22,12 @@ import models.User;
 import utils.FileHandling;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static database.RecipeDAO.userRecipes;
-import static utils.FileHandling.toCSV;
-import static utils.FileHandling.toJSON;
+import static utils.FileHandling.*;
 
 /******************************************************************************
 
@@ -219,12 +219,13 @@ public class HomeWindow
         exitMenuItem.setOnAction(e -> exit());
 
         importMenuItem = new MenuItem("Import");
+        importMenuItem.setOnAction(e -> importFile());
 
         exportCSVMenuItem = new MenuItem("CSV");
-        exportCSVMenuItem.setOnAction(e -> save(FileHandling.Export.CSV));
+        exportCSVMenuItem.setOnAction(e -> exportRecipes(Extension.CSV));
 
         exportJSONMenuItem = new MenuItem("JSON");
-        exportJSONMenuItem.setOnAction(e -> save(FileHandling.Export.JSON));
+        exportJSONMenuItem.setOnAction(e -> exportRecipes(Extension.JSON));
 
         exportMenu.getItems().addAll(exportCSVMenuItem, exportJSONMenuItem);
         userMenu.getItems().addAll(changeUserMenuItem, createUserMenuItem, exitMenuItem);
@@ -321,7 +322,7 @@ public class HomeWindow
         }
     }
 
-    private void save(FileHandling.Export exportType)
+    private void exportRecipes(Extension exportType)
     {
         // Save an export of extension at a selected file location
 
@@ -335,12 +336,12 @@ public class HomeWindow
         FileChooser fileChooser = new FileChooser();
 
         fileChooser.setTitle("Save Export");
-        fileChooser.setInitialFileName("recipes." + extension);
+        fileChooser.setInitialFileName("recipes." + extension.toLowerCase());
         fileChooser.setInitialDirectory(
                 new File(System.getProperty("user.home"), "Downloads")
         );
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(extension + " File", "*." + extension)
+                new FileChooser.ExtensionFilter(extension + " File", "*." + extension.toLowerCase())
         );
 
         File file = fileChooser.showSaveDialog(window);
@@ -354,6 +355,36 @@ public class HomeWindow
             };
 
             successfulIO(status, FileHandling.Operation.EXPORT);
+        }
+    }
+
+    private void importFile()
+    {
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"), "Downloads")
+        );
+
+        File file = fileChooser.showOpenDialog(window);
+
+        // If import is cancelled
+        if (file == null)
+        {
+            return;
+        }
+
+        // Attempt to load file
+        try
+        {
+            Collection<Recipe> importedRecipes = loadFile(file);
+
+            System.out.println(importedRecipes);
+        }
+        catch (Exception e)
+        {
+            // Invalid file extension
+            new AlertBox(e.getMessage());
         }
     }
 

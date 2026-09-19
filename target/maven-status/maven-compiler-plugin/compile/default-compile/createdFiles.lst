@@ -7,8 +7,8 @@ utils\FileHandling.class
 gui\HomeWindow$1.class
 gui\AlertBox.class
 gui\RecipeListCell.class
+utils\FileHandling$Extension.class
 gui\RecipeEditor.class
 gui\ConfirmationBox.class
-utils\FileHandling$Export.class
 gui\HomeWindow.class
 gui\StartWindow.class
