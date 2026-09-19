@@ -122,7 +122,7 @@ public class FileHandling
 
 
     // Support Methods
-    private static Collection<Recipe> readCSV(File file)
+    private static Collection<Recipe> readCSV(File file) throws Exception
     {
         ArrayList<Recipe> recipes = new ArrayList<>();
 
@@ -148,12 +148,12 @@ public class FileHandling
         }
         catch (Exception e)
         {
-            throw new RuntimeException(e);
+            throw new Exception("Invalid file");
         }
         return recipes;
     }
 
-    private static Collection<Recipe> readJSON(File file)
+    private static Collection<Recipe> readJSON(File file) throws Exception
     {
         ArrayList<Recipe> recipes = new ArrayList<>();
 
@@ -178,7 +178,7 @@ public class FileHandling
         }
         catch (Exception e)
         {
-            throw new RuntimeException(e);
+            throw new Exception("Invalid file");
         }
         return recipes;
     }
