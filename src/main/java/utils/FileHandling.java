@@ -35,14 +35,17 @@ public class FileHandling
 
         try (FileWriter writer = new FileWriter("recipes.csv")) {
 
-            writer.write("Name,Ingredients,Directions\n");
+            writer.write("Name,Ingredients,Directions,Serves\n");
 
             for (Recipe recipe : recipes)
             {
+                recipe.resetMultiplier();
+
                 writer.write(
                     csvField(recipe.getName()) + "," +
                         csvField(recipe.getIngredients()) + "," +
-                        csvField(recipe.getDirections()) + "\n"
+                        csvField(recipe.getDirections()) + "," +
+                        csvField((recipe.getServingSizeString())) + "\n"
                 );
             }
         }
@@ -70,7 +73,7 @@ public class FileHandling
             jsonRecipe.put("name", recipe.getName());
             jsonRecipe.put("ingredients", recipe.getIngredients());
             jsonRecipe.put("directions", recipe.getDirections());
-            jsonRecipe.put("serves", recipe.getServingSize());
+            jsonRecipe.put("serves", recipe.getServingSizeString());
 
             jsonRecipes.add(jsonRecipe);
         }
