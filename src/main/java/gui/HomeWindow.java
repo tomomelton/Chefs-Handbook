@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -18,7 +19,9 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import models.Recipe;
 import models.User;
+import utils.FileHandling;
 
+import java.io.File;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -218,10 +221,10 @@ public class HomeWindow
         importMenuItem = new MenuItem("Import");
 
         exportCSVMenuItem = new MenuItem("CSV");
-        exportCSVMenuItem.setOnAction(e -> toCSV(recipes));
+        exportCSVMenuItem.setOnAction(e -> save(FileHandling.Export.CSV));
 
         exportJSONMenuItem = new MenuItem("JSON");
-        exportJSONMenuItem.setOnAction(e -> toJSON(recipes));
+        exportJSONMenuItem.setOnAction(e -> save(FileHandling.Export.JSON));
 
         exportMenu.getItems().addAll(exportCSVMenuItem, exportJSONMenuItem);
         userMenu.getItems().addAll(changeUserMenuItem, createUserMenuItem, exitMenuItem);
@@ -317,6 +320,63 @@ public class HomeWindow
             new HomeWindow(user);
         }
     }
+
+    private void save(FileHandling.Export exportType)
+    {
+        // Save an export of extension at a selected file location
+
+        // Determine extension
+        String extension = switch (exportType)
+        {
+            case CSV -> "CSV";
+            case JSON -> "JSON";
+        };
+
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setTitle("Save Export");
+        fileChooser.setInitialFileName("recipes." + extension);
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"), "Downloads")
+        );
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter(extension + " File", "*." + extension)
+        );
+
+        File file = fileChooser.showSaveDialog(window);
+
+        if (file != null)
+        {
+            boolean status = switch (exportType)
+            {
+                case CSV -> toCSV(recipes, file);
+                case JSON -> toJSON(recipes, file);
+            };
+
+            successfulIO(status, FileHandling.Operation.EXPORT);
+        }
+    }
+
+
+    // Support Methods
+    private void successfulIO(boolean status, FileHandling.Operation IO)
+    {
+        String operation = switch (IO)
+        {
+            case EXPORT -> "Export";
+            case IMPORT -> "Import";
+        };
+
+        if (status)
+        {
+            new AlertBox(operation + " Successful!");
+        }
+        else
+        {
+            new AlertBox(operation + " Failed");
+        }
+    }
+
 
     // Public Methods
     public void resetRecipe()

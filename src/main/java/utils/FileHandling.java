@@ -5,6 +5,7 @@ import models.Recipe;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
@@ -28,12 +29,24 @@ import java.util.Collection;
 
 public class FileHandling
 {
+    // Enums
+    public enum Operation
+    {
+        EXPORT, IMPORT
+    }
+
+    public enum Export
+    {
+        CSV, JSON
+    }
+
+
     // Public Methods
-    public static boolean toCSV(Collection<Recipe> recipes)
+    public static boolean toCSV(Collection<Recipe> recipes, File file)
     {
         // Exports a users recipes to a CSV file
 
-        try (FileWriter writer = new FileWriter("recipes.csv")) {
+        try (FileWriter writer = new FileWriter(file)) {
 
             writer.write("Name,Ingredients,Directions,Serves\n");
 
@@ -56,7 +69,7 @@ public class FileHandling
         return true;
     }
 
-    public static boolean toJSON(Collection<Recipe> recipes)
+    public static boolean toJSON(Collection<Recipe> recipes, File file)
     {
         // Exports a users recipes to a JSON file
 
@@ -79,7 +92,7 @@ public class FileHandling
         }
 
         // Write to file
-        try (FileWriter writer = new FileWriter("recipes.json"))
+        try (FileWriter writer = new FileWriter(file))
         {
             writer.write(jsonRecipes.toJSONString());
         }
