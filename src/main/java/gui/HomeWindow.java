@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import static database.RecipeDAO.insertRecipe;
 import static database.RecipeDAO.userRecipes;
 import static utils.FileHandling.*;
 
@@ -379,13 +380,28 @@ public class HomeWindow
         {
             Collection<Recipe> importedRecipes = loadFile(file);
 
-            System.out.println(importedRecipes);
+            // Add recipes to list and database
+            try
+            {
+                // Insert recipes into database
+                insertRecipe(user.getId(), importedRecipes);
+
+                // Add recipes to recipe list
+                recipes.addAll(importedRecipes);
+            }
+            catch (Exception e)
+            {
+                successfulIO(false, Operation.IMPORT);
+            }
         }
         catch (Exception e)
         {
-            // Invalid file extension
+            // Invalid file error
             new AlertBox(e.getMessage());
+            successfulIO(false, Operation.IMPORT);
         }
+
+        successfulIO(true, Operation.IMPORT);
     }
 
 
