@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static database.DatabaseConnection.getConnection;
@@ -60,6 +61,47 @@ public class RecipeDAO
             statement.setDouble(5, servingSize);
 
             statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void insertRecipe(int userID, Collection<Recipe> recipes)
+    {
+        // method to insert many recipe objects into the database
+
+        String sql =
+                """
+                INSERT INTO recipes (userID, name, ingredients, directions, servingSize)
+                VALUES(?, ?, ?, ?, ?)
+                """;
+
+
+        try( PreparedStatement statement = conn.prepareStatement(sql))
+        {
+            String name, ingredients, directions;
+            double servingSize;
+
+            for (Recipe recipe : recipes)
+            {
+                recipe.resetMultiplier();
+
+                name = recipe.getName();
+                ingredients = recipe.getIngredients();
+                directions = recipe.getDirections();
+                servingSize = recipe.getServingSize();
+
+                statement.setInt(1, userID);
+                statement.setString(2, name);
+                statement.setString(3, ingredients);
+                statement.setString(4, directions);
+                statement.setDouble(5, servingSize);
+
+                statement.addBatch();
+            }
+            statement.executeBatch();
         }
         catch (SQLException e)
         {
