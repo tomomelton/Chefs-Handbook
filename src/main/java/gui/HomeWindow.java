@@ -143,21 +143,6 @@ public class HomeWindow
 
         // Lists
         recipes = FXCollections.observableArrayList();
-        recipes.addAll(
-                userRecipes(this.user.getUsername())
-//            new Recipe(
-//                    1,
-//                    "Toffee Sauce",
-//                    "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
-//                    "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
-//            ),
-//            new Recipe(
-//                    2,
-//                    "Panna Cotta",
-//                    "250g sugar\n500ml milk\n1500ml double cream\n6 gelatin leaves",
-//                    "Bring sugar, milk, and cream to a simmer on a low heat\nTake off heat and add gelatin\nStrain and pour into moulds"
-//            )
-        );
 
         filteredRecipes = new FilteredList<>(recipes, recipe -> true);
 
@@ -169,6 +154,7 @@ public class HomeWindow
         recipeList.getSelectionModel().clearSelection();
         VBox.setVgrow(recipeList, Priority.ALWAYS);
 
+        populateRecipes();
 
         // Searchbar
         recipeSearch = new TextField();
@@ -440,13 +426,10 @@ public class HomeWindow
 
     }
 
-    public void removeRecipe()
+    public void removeRecipe(Recipe recipe)
     {
         // Removes the current Recipe
-
-        Recipe selected = recipeList.getSelectionModel().getSelectedItem();
-
-        recipes.remove(selected);
+        recipes.remove(recipe);
     }
 
     public void displayTopRecipe()
@@ -456,6 +439,8 @@ public class HomeWindow
         try
         {
             Recipe topRecipe = recipeList.getItems().getFirst();
+
+            recipeList.getSelectionModel().selectFirst();
 
             recipeLayout = new RecipeLayout(this, topRecipe);
         }
@@ -467,10 +452,13 @@ public class HomeWindow
         resetRecipe();
     }
 
-    public void addRecipe(Recipe recipe)
+
+    public void populateRecipes()
     {
-        // Adds a new recipe to recipes
-        recipes.add(recipe);
+        // Clears recipes and refills with recipes from database
+        recipes.clear();
+        recipes.addAll(userRecipes(user.getUsername()));
+
         recipeList.refresh();
     }
 }

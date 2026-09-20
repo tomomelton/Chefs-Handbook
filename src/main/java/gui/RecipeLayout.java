@@ -196,11 +196,14 @@ public class RecipeLayout extends VBox
 
         if (confirmationBox.getResponse())
         {
-            parent.removeRecipe();
-            parent.displayTopRecipe();
-
             // Delete recipe from database
             deleteRecipe(recipe);
+
+            // Remove recipe from list
+            parent.removeRecipe(recipe);
+
+            parent.displayTopRecipe();
+
         }
     }
 

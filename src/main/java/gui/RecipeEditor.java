@@ -163,14 +163,15 @@ public class RecipeEditor extends VBox
             // If no previous recipe
             if (parent.getRecipeLayout() == null)
             {
-                // Add recipe to recipe list
-                parent.addRecipe(recipe);
+                // Add recipe to database
+                insertRecipe(parent.getUser().getId(), recipe);
+
+                // Reset recipe list
+                parent.populateRecipes();
 
                 // Set recipe as current layout
                 parent.setRecipeLayout(new RecipeLayout(parent, recipe));
 
-                // Add recipe to database
-                insertRecipe(parent.getUser().getId(), recipe);
             }
             // Reset and refresh
             parent.resetRecipe();
@@ -192,8 +193,10 @@ public class RecipeEditor extends VBox
     {
         // Update recipe object
         recipe.setName(nameField.getText());
-        recipe.setServingSize(Double.parseDouble(servingSizeField.getText()));
         recipe.setIngredients(ingredientsField.getText());
         recipe.setDirections(directionsField.getText());
+        recipe.setServingSize(Double.parseDouble(
+                servingSizeField.getText() != null ? "0.0" : servingSizeField.getText()
+        ));
     }
 }
