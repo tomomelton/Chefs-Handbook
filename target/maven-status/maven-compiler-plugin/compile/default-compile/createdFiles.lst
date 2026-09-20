@@ -1,10 +1,14 @@
-gui\ConfirmationBox.class
 gui\RegisterWindow.class
+utils\FileHandling$Operation.class
 gui\LoginWindow.class
-gui\HomeWindow.class
 Main.class
 gui\RecipeLayout.class
+utils\FileHandling.class
+gui\HomeWindow$1.class
 gui\AlertBox.class
 gui\RecipeListCell.class
-gui\StartWindow.class
+utils\FileHandling$Extension.class
 gui\RecipeEditor.class
+gui\ConfirmationBox.class
+gui\HomeWindow.class
+gui\StartWindow.class

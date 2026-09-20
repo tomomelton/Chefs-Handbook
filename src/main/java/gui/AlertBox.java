@@ -1,6 +1,7 @@
 package gui;
 
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,6 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 /******************************************************************************
 
@@ -48,31 +51,35 @@ public class AlertBox
     // Constructor
     public AlertBox(String message)
     {
-        // Layout
-        layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
-
-
         // Label
         this.message = new Label(message);
-        this.message.setStyle("-fx-font-size: 20; -fx-font-weight: bold");
+        this.message.getStyleClass().add("red-label");
 
 
         // Buttons
         confirmButton = new Button("Okay");
-        confirmButton.setOnAction(e -> {window.close();});
+        confirmButton.getStyleClass().add("red-button");
+        confirmButton.setDefaultButton(true);
+        confirmButton.setOnAction(e -> window.close());
 
 
-        // Build Layout
+        // Layout
+        layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20, 20, 20, 20));
         layout.getChildren().addAll(this.message, confirmButton);
 
 
         // Scene
         scene = new Scene(layout);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(AlertBox.class.getResource("/styles/main.css")).toExternalForm()
+        );
 
 
         // Window
         window = new Stage();
+        window.setTitle("Alert");
         window.initModality(Modality.APPLICATION_MODAL);
         window.setMinWidth(350);
         window.setMinHeight(250);

@@ -36,6 +36,7 @@ public class RecipeEditor extends VBox
 
     // Text Editors
     private TextField nameField;
+    private TextField servingSizeField;
     private TextArea ingredientsField;
     private TextArea directionsField;
 
@@ -62,12 +63,21 @@ public class RecipeEditor extends VBox
         // Text Editors
         nameField = new TextField();
         nameField.setPromptText("Recipe name...");
+        nameField.getStyleClass().add("field-border");
+
+        servingSizeField = new TextField();
+        servingSizeField.setPromptText("Serving size...");
+        servingSizeField.getStyleClass().add("field-border");
 
         ingredientsField = new TextArea();
         ingredientsField.setPromptText("Ingredient 1...  Ingredient 2...  Ingredient 3...");
+        ingredientsField.setWrapText(true);
+        ingredientsField.getStyleClass().add("field-border");
 
         directionsField = new TextArea();
         directionsField.setPromptText("Step 1...  Step 2...  Step 3...");
+        directionsField.setWrapText(true);
+        directionsField.getStyleClass().add("field-border");
 
 
         // Labels
@@ -82,10 +92,12 @@ public class RecipeEditor extends VBox
         saveButton = new Button();
         saveButton.setGraphic(new FontIcon(FontAwesomeSolid.SAVE));
         saveButton.setOnAction(e -> save());
+        saveButton.getStyleClass().add("red-button");
 
         cancelButton = new Button();
         cancelButton.setGraphic(new FontIcon(FontAwesomeSolid.TIMES));
         cancelButton.setOnAction(e -> cancel());
+        cancelButton.getStyleClass().add("red-button");
 
 
         // Tooltips
@@ -102,7 +114,7 @@ public class RecipeEditor extends VBox
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        topRow.getChildren().addAll(nameField, spacer, saveButton, cancelButton);
+        topRow.getChildren().addAll(nameField, servingSizeField, spacer, saveButton, cancelButton);
 
 
         // Layout
@@ -122,6 +134,7 @@ public class RecipeEditor extends VBox
 
         // Text Editors
         nameField.setText(recipe.getName());
+        servingSizeField.setText(recipe.getServingSizeString());
         ingredientsField.setText(recipe.getIngredients());
         directionsField.setText(recipe.getDirections());
     }
@@ -132,7 +145,11 @@ public class RecipeEditor extends VBox
     {
         ConfirmationBox confirmationBox = new ConfirmationBox("Are you want to cancel?");
 
-        if (confirmationBox.getResponse()) parent.resetRecipe();
+        if (confirmationBox.getResponse())
+        {
+            parent.resetRecipe();
+            parent.setEditing(false);
+        }
     }
 
     private void save()
@@ -146,18 +163,20 @@ public class RecipeEditor extends VBox
             // If no previous recipe
             if (parent.getRecipeLayout() == null)
             {
-                // Add recipe to recipe list
-                parent.addRecipe(recipe);
+                // Add recipe to database
+                insertRecipe(parent.getUser().getId(), recipe);
+
+                // Reset recipe list
+                parent.populateRecipes();
 
                 // Set recipe as current layout
                 parent.setRecipeLayout(new RecipeLayout(parent, recipe));
 
-                // Add recipe to database
-                insertRecipe(parent.getUser().getId(), recipe);
             }
             // Reset and refresh
             parent.resetRecipe();
             parent.getRecipeLayout().refresh();
+            parent.setEditing(false);
 
             // Update recipe in database
             RecipeDAO.updateRecipe(recipe);
@@ -176,5 +195,8 @@ public class RecipeEditor extends VBox
         recipe.setName(nameField.getText());
         recipe.setIngredients(ingredientsField.getText());
         recipe.setDirections(directionsField.getText());
+        recipe.setServingSize(Double.parseDouble(
+                servingSizeField.getText() != null ? "0.0" : servingSizeField.getText()
+        ));
     }
 }

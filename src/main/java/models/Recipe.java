@@ -25,20 +25,23 @@ public class Recipe
     private String ingredients;
     private String directions;
     private double multiplier = 1;
+    private double servingSize;
 
     public Recipe()
     {
         this.name = "";
         this.ingredients = "";
         this.directions = "";
+        this.servingSize = 1;
     }
 
-    public Recipe(int recipeID, String name, String ingredients, String directions)
+    public Recipe(int recipeID, String name, String ingredients, String directions, double servingSize)
     {
         this.recipeID = recipeID;
         this.name = name;
         this.ingredients = ingredients;
         this.directions = directions;
+        this.servingSize = servingSize;
     }
 
     public int getRecipeID() {
@@ -73,6 +76,12 @@ public class Recipe
         return multiplier;
     }
 
+    public String getMultiplierString()
+    {
+        // Method to return multiplier as a string, formatting to remove decimal places if whole
+        return multiplier % 1 == 0 ? String.valueOf((int) multiplier) : String.valueOf(multiplier);
+    }
+
     public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
     }
@@ -81,11 +90,29 @@ public class Recipe
         this.multiplier = 1;
     }
 
+    public double getServingSize() {
+        return servingSize * multiplier;
+    }
+
+    public String getServingSizeString()
+    {
+        // Method to return serving size as a string, formatting to remove decimal places if whole
+
+        double servingSize = getServingSize();
+
+        return servingSize % 1 == 0 ? String.valueOf((int) servingSize) : String.valueOf(servingSize);
+    }
+
+    public void setServingSize(double servingSize) {
+        this.servingSize = servingSize;
+    }
+
     @Override
     public String toString()
     {
         return
             name +
+            "\n\nServes: " + servingSize +
             "\n\nIngredients:\n" + getIngredients() +
             "\n\nDirections:\n" + getDirections();
     }
@@ -111,13 +138,15 @@ public class Recipe
                 1,
                 "Toffee Sauce",
                 "4 packs of butter\n100.5g caster sugar\ngolden syrup\n100ml double cream",
-                "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled"
+                "1. heat butter, sugar, syrup in a pan on low heat until combined\n2. take off heat and add cream\n3. strain once cooled",
+                25
         );
         Recipe pannaCotta = new Recipe(
                 2,
                 "Panna Cotta",
                 "250g sugar\n500ml milk\n1500ml double cream\n6 gelatin leaves",
-                "Bring sugar, milk, and cream to a simmer on a low heat\nTake off heat and add gelatin\nStrain and pour into moulds"
+                "Bring sugar, milk, and cream to a simmer on a low heat\nTake off heat and add gelatin\nStrain and pour into moulds",
+                15
         );
 
         toffeeSauce.setMultiplier(0.9);

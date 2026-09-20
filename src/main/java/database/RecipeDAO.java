@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static database.DatabaseConnection.getConnection;
@@ -35,16 +36,20 @@ public class RecipeDAO
         // method to insert recipe object into the database
 
         String name, ingredients, directions;
+        double servingSize;
+
+        recipe.resetMultiplier();
 
         name = recipe.getName();
         ingredients = recipe.getIngredients();
         directions = recipe.getDirections();
+        servingSize = recipe.getServingSize();
 
 
         String sql =
                 """
-                INSERT INTO recipes (userID, name, ingredients, directions)
-                VALUES(?, ?, ?, ?)
+                INSERT INTO recipes (userID, name, ingredients, directions, servingSize)
+                VALUES(?, ?, ?, ?, ?)
                 """;
 
         try( PreparedStatement statement = conn.prepareStatement(sql))
@@ -53,8 +58,50 @@ public class RecipeDAO
             statement.setString(2, name);
             statement.setString(3, ingredients);
             statement.setString(4, directions);
+            statement.setDouble(5, servingSize);
 
             statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void insertRecipe(int userID, Collection<Recipe> recipes)
+    {
+        // method to insert many recipe objects into the database
+
+        String sql =
+                """
+                INSERT INTO recipes (userID, name, ingredients, directions, servingSize)
+                VALUES(?, ?, ?, ?, ?)
+                """;
+
+
+        try( PreparedStatement statement = conn.prepareStatement(sql))
+        {
+            String name, ingredients, directions;
+            double servingSize;
+
+            for (Recipe recipe : recipes)
+            {
+                recipe.resetMultiplier();
+
+                name = recipe.getName();
+                ingredients = recipe.getIngredients();
+                directions = recipe.getDirections();
+                servingSize = recipe.getServingSize();
+
+                statement.setInt(1, userID);
+                statement.setString(2, name);
+                statement.setString(3, ingredients);
+                statement.setString(4, directions);
+                statement.setDouble(5, servingSize);
+
+                statement.addBatch();
+            }
+            statement.executeBatch();
         }
         catch (SQLException e)
         {
@@ -67,19 +114,22 @@ public class RecipeDAO
         // method to insert recipe object into the database
 
         String name, ingredients, directions;
+        double servingSize;
         int recipeID;
 
+        recipe.resetMultiplier();
 
         name = recipe.getName();
         ingredients = recipe.getIngredients();
         directions = recipe.getDirections();
+        servingSize = recipe.getServingSize();
         recipeID = recipe.getRecipeID();
 
 
         String sql =
                 """
                 UPDATE recipes
-                SET (name, ingredients, directions) = (?, ?, ?)
+                SET (name, ingredients, directions, servingSize) = (?, ?, ?, ?)
                 WHERE recipeid = ?;
                 """;
 
@@ -88,7 +138,8 @@ public class RecipeDAO
             statement.setString(1, name);
             statement.setString(2, ingredients);
             statement.setString(3, directions);
-            statement.setInt(4, recipeID);
+            statement.setDouble(4, servingSize);
+            statement.setInt(5, recipeID);
 
             statement.executeUpdate();
         }
@@ -129,7 +180,8 @@ public class RecipeDAO
                         resultSet.getInt("recipeID"),
                         resultSet.getString("name"),
                         resultSet.getString("ingredients"),
-                        resultSet.getString("directions")
+                        resultSet.getString("directions"),
+                        resultSet.getDouble("servingSize")
                 ));
             }
             return recipes;
@@ -139,5 +191,25 @@ public class RecipeDAO
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static void deleteRecipe(Recipe recipe)
+    {
+        String sql =
+                """
+                DELETE FROM recipes
+                WHERE recipeID = ?;
+                """;
+
+        try( PreparedStatement statement = conn.prepareStatement(sql))
+        {
+            statement.setInt(1, recipe.getRecipeID());
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -17,6 +17,7 @@ CREATE TABLE recipes (
 	ingredients VARCHAR,
 	directions VARCHAR,
 	creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	servingSize NUMERIC NOT NULL DEFAULT 1,
 
 	FOREIGN KEY (userID) 
 	REFERENCES users(userID)

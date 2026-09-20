@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +14,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import models.User;
+
+import java.util.Objects;
 
 import static database.UserDAO.getUser;
 import static utils.Hash.checkPassword;
@@ -38,89 +41,145 @@ public class LoginWindow
 {
     private static User user;
 
+    // Scene
+    private static Scene scene;
+
+    // Window
+    private static Stage window;
+
+    // Layouts
+    private static GridPane grid;
+    private static HBox buttons;
+
+    // Labels
+    private static Label nameLabel;
+    private static Label passLabel;
+    private static Label errorLabel;
+
+    // Fields
+    private static TextField nameInput;
+    private static TextField passVisibleInput;
+    private static PasswordField passHiddenInput;
+
+    // Buttons
+    private static Button loginButton;
+    private static Button cancelButton;
+    private static Button showPasswordButton;
+
+
+    // Public Methods
     public static User load()
     {
-        // Window
-        Stage window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Chefs Handbook - Login");
-        window.setMinHeight(250);
-        window.setMinWidth(400);
+        // Labels
+        nameLabel = new Label("Username: ");
+        passLabel = new Label("Password: ");
 
-        // Grid
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
-        grid.setAlignment(Pos.CENTER);
-
-        // Name label
-        Label nameLabel = new Label("Username: ");
-        GridPane.setConstraints(nameLabel, 0, 0);
-
-        // Name input
-        TextField nameInput = new TextField();
-        nameInput.setText("Tom");
-        GridPane.setConstraints(nameInput, 1, 0);
-
-        // Password label
-        Label passLabel = new Label("Password: ");
-        GridPane.setConstraints(passLabel, 0, 1);
-
-        // Password input
-        PasswordField passInput = new PasswordField();
-        passInput.setPromptText("password");
-        passInput.setText("password");
-        GridPane.setConstraints(passInput, 1, 1);
-
-        // Error label
-        Label errorLabel = new Label("Username or password incorrect");
-        errorLabel.setStyle(
-                "-fx-text-fill: red;" +
-                "-fx-font-weight: bold;"
-        );
+        errorLabel = new Label("Username or password incorrect");
         errorLabel.setVisible(false);
-        GridPane.setConstraints(errorLabel, 1, 3);
+        errorLabel.getStyleClass().add("error");
+
+
+        // Fields
+        nameInput = new TextField();
+        nameInput.setPromptText("Enter Username...");
+        nameInput.setText("Tom");
+        nameInput.getStyleClass().add("field-border");
+
+        passVisibleInput = new TextField();
+        passVisibleInput.setVisible(false);
+        passVisibleInput.setPromptText("Enter password...");
+        passVisibleInput.setText("password");
+        passVisibleInput.getStyleClass().add("field-border");
+
+        passHiddenInput = new PasswordField();
+        passHiddenInput.setVisible(true);
+        passHiddenInput.setPromptText("Enter password...");
+        passHiddenInput.setText("password");
+        passHiddenInput.getStyleClass().add("field-border");
+        passHiddenInput.textProperty().bindBidirectional(passVisibleInput.textProperty());
 
 
         // Buttons
-        HBox buttons = new HBox(10);
-
-        // Login button
-        Button loginButton = new Button("Login");
+        loginButton = new Button("Login");
+        loginButton.getStyleClass().add("red-button");
+        loginButton.setDefaultButton(true);
         loginButton.setOnAction(e -> {
 
-            boolean valid = login(nameInput.getText(), passInput.getText());
+            boolean valid = login(nameInput.getText(), passHiddenInput.getText());
 
             if (valid)
                 window.close();
             else
             {
                 errorLabel.setVisible(true);
-                passInput.clear();
+                passHiddenInput.clear();
             }
         });
 
-        // Cancel button
-        Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(e -> window.close());
+        cancelButton = new Button("Cancel");
+        cancelButton.getStyleClass().add("red-button");
+        cancelButton.setOnAction(e -> cancel());
 
+        showPasswordButton = new Button("Show");
+        showPasswordButton.getStyleClass().add("red-button");
+        showPasswordButton.setPrefWidth(55);
+        showPasswordButton.setOnAction(e -> togglePasswordVisible(
+                showPasswordButton, passHiddenInput, passVisibleInput
+        ));
+
+
+        // Layouts
+        buttons = new HBox(10);
         buttons.getChildren().addAll(loginButton, cancelButton);
-        GridPane.setConstraints(buttons, 1, 2);
+
+        grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+        grid.setAlignment(Pos.CENTER);
+        grid.getChildren().addAll(
+                nameLabel, nameInput,
+                passLabel, passVisibleInput, passHiddenInput, showPasswordButton,
+                buttons, errorLabel
+        );
 
 
+        // Grid
+        GridPane.setConstraints(nameLabel,             0, 0);
+        GridPane.setConstraints(nameInput,             1, 0);
+        GridPane.setConstraints(passLabel,             0, 1);
+        GridPane.setConstraints(passVisibleInput,      1, 1);
+        GridPane.setConstraints(passHiddenInput,       1, 1);
+        GridPane.setConstraints(showPasswordButton,    2, 1);
+        GridPane.setConstraints(buttons,               1, 2);
+
+        GridPane.setConstraints(errorLabel,            0, 3);
+        GridPane.setColumnSpan(errorLabel, 3);
+        GridPane.setHalignment(errorLabel, HPos.CENTER);
 
 
-        grid.getChildren().addAll(nameLabel, nameInput, passLabel, passInput, buttons, errorLabel);
+        // Scene
+        scene = new Scene(grid);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(LoginWindow.class.getResource("/styles/main.css")).toExternalForm()
+        );
 
-        Scene scene = new Scene(grid);
-
+        // Window
+        window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Chefs Handbook - Login");
+        window.setOnCloseRequest(e -> cancel());
+        window.setMinHeight(250);
+        window.setMinWidth(400);
         window.setScene(scene);
         window.showAndWait();
+
 
         return user;
     }
 
+
+    // Button Methods
     private static boolean login(String username, String password)
     {
         try
@@ -137,5 +196,22 @@ public class LoginWindow
             return false;
         }
 
+    }
+
+    private static void togglePasswordVisible(Button button, PasswordField passwordField, TextField visiblePassword)
+    {
+        boolean showing = visiblePassword.isVisible();
+
+        visiblePassword.setVisible(!showing);
+
+        passwordField.setVisible(showing);
+
+        button.setText(showing ? "Show" : "Hide");
+    }
+
+    private static void cancel()
+    {
+        window.close();
+        user = null;
     }
 }

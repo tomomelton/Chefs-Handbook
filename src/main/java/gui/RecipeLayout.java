@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -12,6 +13,8 @@ import models.Recipe;
 
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
+
+import static database.RecipeDAO.deleteRecipe;
 
 /******************************************************************************
 
@@ -33,13 +36,13 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 public class RecipeLayout extends VBox
 {
-
     private final Recipe recipe;
     private final HomeWindow parent;
 
     // Layouts
     private final HBox titleRow;
     private final HBox scaleRow;
+    private final VBox contentBox;
 
     // Labels
     private final Label nameLabel;
@@ -48,6 +51,10 @@ public class RecipeLayout extends VBox
     private final Label directionsHeading;
     private final Label directionsContent;
     private final Label scaleLabel;
+    private final Label servingSizeLabel;
+
+    // ScrollPane
+    private final ScrollPane scrollPane;
 
     // Text Fields
     private final TextField scaleInput;
@@ -73,43 +80,54 @@ public class RecipeLayout extends VBox
 
         // Labels
         nameLabel = new Label(recipe.getName());
-        nameLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold");
+        nameLabel.getStyleClass().add("red-label");
+        nameLabel.setStyle("-fx-font-size: 20");
+
+        servingSizeLabel = new Label("Serves: " + recipe.getServingSizeString());
+        servingSizeLabel.getStyleClass().add("content-text");
 
         ingredientsHeading = new Label("Ingredients:\n\n");
-        ingredientsHeading.setStyle("-fx-font-size: 18; -fx-font-weight: bold");
+        ingredientsHeading.getStyleClass().add("subheading-text");
 
         ingredientsContent = new Label(this.recipe.getIngredients());
-        ingredientsContent.setStyle("-fx-font-size: 13");
+        ingredientsContent.getStyleClass().add("content-text");
+        ingredientsContent.setWrapText(true);
 
         directionsHeading = new Label("Directions:\n\n");
-        directionsHeading.setStyle("-fx-font-size: 18; -fx-font-weight: bold");
+        directionsHeading.getStyleClass().add("subheading-text");
 
         directionsContent = new Label(recipe.getDirections());
-        directionsContent.setStyle("-fx-font-size: 13");
+        directionsContent.getStyleClass().add("content-text");
+        directionsContent.setWrapText(true);
 
         scaleLabel = new Label("Scale Multiplier:");
         scaleLabel.setStyle("-fx-font-size: 15");
 
 
         // Text Fields
-        scaleInput = new TextField("1.0");
+        scaleInput = new TextField(recipe.getMultiplierString());
         scaleInput.setMinWidth(5);
+        scaleInput.getStyleClass().add("field-border");
 
 
         // Buttons
         editButton = new Button();
         editButton.setGraphic(new FontIcon(FontAwesomeSolid.PEN));
         editButton.setOnAction(e -> edit());
+        editButton.getStyleClass().add("red-button");
 
         deleteButton = new Button();
         deleteButton.setGraphic(new FontIcon(FontAwesomeSolid.TRASH));
         deleteButton.setOnAction(e -> delete());
+        deleteButton.getStyleClass().add("red-button");
 
         setScaleButton = new Button("Set");
         setScaleButton.setOnAction(e -> setScale());
+        setScaleButton.getStyleClass().add("red-button");
 
         resetScaleButton = new Button("Reset");
         resetScaleButton.setOnAction(e -> resetScale());
+        resetScaleButton.getStyleClass().add("red-button");
 
 
         // Tooltips
@@ -131,7 +149,24 @@ public class RecipeLayout extends VBox
 
         // Scale Row
         scaleRow = new HBox(5);
+        scaleRow.setAlignment(Pos.CENTER_LEFT);
         scaleRow.getChildren().addAll(scaleLabel, scaleInput, setScaleButton, resetScaleButton);
+
+
+        // Content Box
+        contentBox = new VBox(5);
+        contentBox.getChildren().addAll(
+                ingredientsHeading, ingredientsContent,
+                directionsHeading, directionsContent
+        );
+
+
+        // Scroll Pane
+        scrollPane = new ScrollPane(contentBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
 
         // Layout
@@ -140,17 +175,11 @@ public class RecipeLayout extends VBox
         getChildren().addAll(
                 titleRow,
                 scaleRow,
-                ingredientsHeading, ingredientsContent,
-                directionsHeading, directionsContent
+                servingSizeLabel,
+                scrollPane
         );
 
-        setStyle(
-                """
-                -fx-background-color: #ededed;
-                -fx-border-color: #c7c7c7;
-                -fx-border-width: 3
-                """
-        );
+        setId("recipe");
     }
 
 
@@ -158,7 +187,7 @@ public class RecipeLayout extends VBox
     private void edit()
     {
         parent.setCenter(new RecipeEditor(parent, recipe));
-
+        parent.setEditing(true);
     }
 
     private void delete()
@@ -167,8 +196,14 @@ public class RecipeLayout extends VBox
 
         if (confirmationBox.getResponse())
         {
-            parent.removeRecipe();
+            // Delete recipe from database
+            deleteRecipe(recipe);
+
+            // Remove recipe from list
+            parent.removeRecipe(recipe);
+
             parent.displayTopRecipe();
+
         }
     }
 
@@ -183,7 +218,7 @@ public class RecipeLayout extends VBox
 
     private void resetScale()
     {
-        scaleInput.setText("1.0");
+        scaleInput.setText("1");
 
         recipe.resetMultiplier();
 
@@ -196,6 +231,7 @@ public class RecipeLayout extends VBox
     {
         // Sets labels with current recipe information
         nameLabel.setText(recipe.getName());
+        servingSizeLabel.setText("Serves: " + recipe.getServingSizeString());
         ingredientsContent.setText(recipe.getIngredients());
         directionsContent.setText(recipe.getDirections());
     }
