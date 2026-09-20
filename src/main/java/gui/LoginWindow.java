@@ -118,7 +118,7 @@ public class LoginWindow
 
         cancelButton = new Button("Cancel");
         cancelButton.getStyleClass().add("red-button");
-        cancelButton.setOnAction(e -> window.close());
+        cancelButton.setOnAction(e -> cancel());
 
         showPasswordButton = new Button("Show");
         showPasswordButton.getStyleClass().add("red-button");
@@ -168,6 +168,7 @@ public class LoginWindow
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Chefs Handbook - Login");
+        window.setOnCloseRequest(e -> cancel());
         window.setMinHeight(250);
         window.setMinWidth(400);
         window.setScene(scene);
@@ -206,5 +207,11 @@ public class LoginWindow
         passwordField.setVisible(showing);
 
         button.setText(showing ? "Show" : "Hide");
+    }
+
+    private static void cancel()
+    {
+        window.close();
+        user = null;
     }
 }

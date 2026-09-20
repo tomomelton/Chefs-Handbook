@@ -293,11 +293,13 @@ public class HomeWindow
     private void changeUser()
     {
         User user = LoginWindow.load();
+
         if (user != null)
         {
             window.close();
             new HomeWindow(user);
-        }    }
+        }
+    }
 
     private void newUser()
     {
