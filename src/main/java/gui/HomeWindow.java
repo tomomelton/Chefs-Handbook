@@ -151,10 +151,11 @@ public class HomeWindow
         recipeList.setCellFactory(list -> new RecipeListCell());
         recipeList.setOnMouseClicked(e -> {if (!editing) displayRecipe();});
         recipeList.getStyleClass().add("field-border");
-        recipeList.getSelectionModel().clearSelection();
         VBox.setVgrow(recipeList, Priority.ALWAYS);
 
         populateRecipes();
+
+        recipeList.getSelectionModel().clearSelection();
 
         // Searchbar
         recipeSearch = new TextField();
@@ -453,7 +454,6 @@ public class HomeWindow
         }
         resetRecipe();
     }
-
 
     public void populateRecipes()
     {
