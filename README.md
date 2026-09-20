@@ -77,6 +77,7 @@ erDiagram
         SERIAL userID FK
         VARCHAR ingredients
         VARCHAR directions
+        NUMERIC servingSize
         TIMESTAMP creationDate
     }
 ```
